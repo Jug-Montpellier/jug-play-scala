@@ -2,7 +2,6 @@ import sbt._
 import Keys._
 import play.Project._
 
-
 object ApplicationBuild extends Build {
 
   val appName = "jug-play-scala"
@@ -15,11 +14,10 @@ object ApplicationBuild extends Build {
     "org.hibernate" % "hibernate-entitymanager" % "3.6.9.Final",
     jdbc)
 
-  val main = play.Project(appName, appVersion, appDependencies).settings(
-    // Add your own project settings here      
-    playAssetsDirectories <+= baseDirectory / "packages"//,
-//    playAssetsDirectories <+= baseDirectory / "dart",
-//    cleanFiles <+= (name) {   n=> { println(n);file("dart/*") } }
-    )
-   
+  val main = play.Project(appName, appVersion, appDependencies).settings( // Add your own project settings here      
+  //    playAssetsDirectories <+= "public" ,
+  //    playAssetsDirectories <+= baseDirectory / "dart",
+  //    cleanFiles <+= (name) {   n=> { println(n);file("dart/*") } }
+  )
+
 }
