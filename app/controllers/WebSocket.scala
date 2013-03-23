@@ -1,28 +1,30 @@
 package controllers
 
+import java.util.Date
+
+import scala.concurrent.Future
+import scala.concurrent.duration.Duration
+import scala.concurrent.duration.DurationInt
+
+import akka.actor.Actor
+import akka.actor.Props
+import akka.actor.actorRef2Scala
+import akka.pattern.ask
+import akka.util.Timeout
+import play.api.Play.current
+import play.api.libs.concurrent.Akka
+import play.api.libs.concurrent.Execution.Implicits.defaultContext
+import play.api.libs.iteratee.Concurrent
+import play.api.libs.iteratee.Done
+import play.api.libs.iteratee.Enumerator
+import play.api.libs.iteratee.Input
+import play.api.libs.iteratee.Iteratee
+import play.api.libs.json.JsArray
+import play.api.libs.json.JsObject
+import play.api.libs.json.JsString
+import play.api.libs.json.JsValue
 import play.api.mvc.Controller
 import play.api.mvc.WebSocket
-import play.api.libs.json.JsValue
-import akka.util.Timeout
-import scala.concurrent.duration._
-import play.api.libs.concurrent.Akka
-import akka.actor.Actor
-import play.api.Play.current
-import akka.actor.Props
-import scala.concurrent.Future
-import play.api.libs.iteratee.Iteratee
-import play.api.libs.iteratee.Enumerator
-import akka.actor._
-import scala.concurrent.duration._
-import play.api._
-import play.api.libs.json._
-import play.api.libs.iteratee._
-import play.api.libs.concurrent._
-import akka.util.Timeout
-import akka.pattern.ask
-import play.api.Play.current
-import play.api.libs.concurrent.Execution.Implicits._
-import java.util.Date
 
 object WebSockets extends Controller {
 
@@ -34,34 +36,39 @@ object WebSockets extends Controller {
 
 object ConnectionActor {
 
-  Duration
-
   implicit val timeout = Timeout(1 second)
 
-  
-  
-  lazy val default = {
-    val connectionActor = Akka.system.actorOf(Props[ConnectionActor])
-    
-    val cancellable =
-    Akka.system.scheduler.schedule(0 milliseconds,
-    5000 milliseconds,
-    connectionActor,
-    Tick)
-    
-    connectionActor
-  }
+  //  def test = {
+  //    default ? Join("zozo")
+  //  }
 
   def connect(username: String): Future[(Iteratee[JsValue, _], Enumerator[JsValue])] = {
+    lazy val default = {
+      val connectionActor = Akka.system.actorOf(Props[ConnectionActor])
+
+      println("Build lazy actor")
+
+      val cancellable =
+        Akka.system.scheduler.schedule(0 milliseconds,
+          1000 milliseconds,
+          connectionActor,
+          Tick)
+
+      connectionActor
+    }
     (default ? Join(username)).map {
-      case Connected(enumerator) =>
+      case Connected(enumerator) => {
+        println("connected")
         val iteratee = Iteratee.foreach[JsValue] { event =>
+          println("received " + event \ "text")
           default ! Message(username, (event \ "text").as[String])
         }.mapDone { _ =>
+          println("Done")
           default ! Quit(username)
         }
         (iteratee, enumerator)
 
+      }
       case CannotConnect(error) =>
 
         // Connection error
@@ -84,10 +91,10 @@ class ConnectionActor extends Actor {
 
   def receive = {
     case Join(username) => {
-      
-       members = members + username
-        sender ! Connected(chatEnumerator)
-        self ! NotifyJoin(username)
+
+      members = members + username
+      sender ! Connected(chatEnumerator)
+      //        self ! NotifyJoin(username)
     }
 
     case NotifyJoin(username) => {
@@ -101,8 +108,9 @@ class ConnectionActor extends Actor {
     case Quit(username) => {
       members = members - username
       notifyAll("quit", username, "has left the room")
+      Akka.system.stop(self)
     }
-    
+
     case Tick => notifyAll("msg", "tick", "It is " + new Date)
 
   }
@@ -116,6 +124,11 @@ class ConnectionActor extends Actor {
         "members" -> JsArray(
           members.toList.map(JsString))))
     chatChannel.push(msg)
+  }
+
+  override def postStop() = {
+    println("Bye")
+    super.postStop();
   }
 
 }
