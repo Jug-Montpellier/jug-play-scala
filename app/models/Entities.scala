@@ -1,6 +1,11 @@
 package models
 
+import controllers.JSonFormats
+
 import play.Play
+import play.api.mvc.AnyContent
+import play.api.libs.json._
+import play.api.mvc.Request
 import scala.slick.driver.BasicDriver.simple._
 //import scala.slick.driver.PostgresDriver.simple._
 
@@ -8,13 +13,29 @@ import Database.threadLocalSession
 import java.sql.Timestamp
 import java.util.Calendar
 
-case class User(id: Option[Long], email: Option[String])
 
-object util {
+object util  {
   def now() = {
     new Timestamp(Calendar.getInstance().getTime().getTime())
   }
+  
+ 
 }
+
+case class Test(id: Option[Int], name: String, nickname: Option[String])
+
+object Tests extends Table[Test]("test") {
+  def id = column[Int]("id", O.NotNull, O.PrimaryKey, O.AutoInc)
+  def name = column[String]("name")
+  def nickname = column[String]("nickname")
+  def * = id.? ~ name ~ nickname.? <> (Test, Test.unapply _)
+
+  def autoInc = name ~ nickname.? returning id
+  
+  def all() = Query(Tests).list
+}
+
+case class User(id: Option[Long], email: Option[String])
 
 object Users extends Table[User]("User") {
   def id = column[Long]("id", O.PrimaryKey)
@@ -33,10 +54,6 @@ object Answers extends Table[Answer]("answer") {
   def * = id.? ~ answer ~ votes.? ~ poll_id <> (Answer, Answer.unapply _)
 
   def all() = Query(Answers).list
-}
-
-object tets {
-
 }
 
 case class Event(id: Option[Long], capacity: Int, date: Option[Timestamp], description: Option[String], location: Option[String], map: Option[String], open: Boolean, registrationurl: Option[String], report: Option[String], title: Option[String], partner_id: Option[Long]) {
@@ -70,7 +87,7 @@ object Events extends Table[Event]("event") {
   def pastAndUpComing = Query(Events).sortBy(_.date.desc.nullsLast).list.partition { e => e.date.get.before(util.now()) }
 
   def all = Query(Events).sortBy(_.date).list
-  
+
   def getById(id: Long) = {
 
     val q = for {

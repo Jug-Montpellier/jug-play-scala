@@ -16,6 +16,8 @@ GET     /partner/:id                controllers.Application.partner(id: Long)
 GET     /api/speakers               controllers.API.speakers
 GET     /api/events                 controllers.API.events
 GET     /api/yearpartners           controllers.API.yearPartners
+GET     /api/tests                  controllers.API.tests
+POST    /api/tests                  controllers.API.testsInsert
 
 GET     /ws/:username/:rate               controllers.WebSockets.connect(username: String, rate: Int)
 

@@ -5,6 +5,7 @@ import 'dart:math';
 
 void main() {
  
+  
   String loc = document.window.location.toString();
   int i = loc.indexOf("/assets/sosimple.html");
   String base;
@@ -14,7 +15,8 @@ void main() {
     }else{
      base = loc.substring(7, i);
   }
-  window.alert(base);
+  
+  addDBInsert(base);
   
   Random rand = new Random(1); 
   
@@ -72,6 +74,17 @@ void main() {
   });
   
   
+}
+
+addDBInsert(String base) {
+  ButtonElement insert = query("#insert");
+  insert.onClick.listen((e){
+    HttpRequest req = new HttpRequest();
+    var url = "http://${base}/api/tests";
+    req.open("POST", url);
+    req.setRequestHeader("Content-type", "application/json");
+    req.send('{"name": "naine"}');
+  });
 }
 
 void reverseText(MouseEvent event) {

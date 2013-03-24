@@ -16,12 +16,12 @@ trait DBSession {
 
   lazy val database = Database.forDataSource(DB.getDataSource())
 
-  def withSession[A](f: => SimpleResult[A]): SimpleResult[A] = {
-    database.withSession {
-      f
-    }
-
-  }
+//  def withSession[A](f: => SimpleResult[A]): SimpleResult[A] = {
+//    database.withSession {
+//      f
+//    }
+//
+//  }
 
   def withSession[A](f: => A): A = {
     database.withSession {

@@ -23,6 +23,8 @@ trait JSonFormats {
   
   implicit val yearpartnerReads = Json.format[Yearpartner]
   
+  implicit val testReads = Json.format[Test]
   
 
 }
+
