@@ -5,7 +5,7 @@ This project needs sbt-dart-plugin to be installed first in your local repositor
 
 $> export DART_HOME=/path/to/dart_sdk
 $> cd jug-play-scala
-$> cd app/assets
+$> cd public
 #Install dart dependencies.
 $> $DART_HOME/bin/pub install 
 $> cd -
