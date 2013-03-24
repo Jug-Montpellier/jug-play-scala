@@ -15,7 +15,15 @@
       <p id="sample_text_id"></p>
     </div>
     <div>
-      <button id="connect">Connect</button><button id="ping">ping</button><button id="disconnect">disconnect</button>
+      <p>Simple demo of websocket push</p>
+      <button id="connect">Connect</button>
+      Choose rate of server push<select id="rate">
+        <option value="1" label="1 second" />
+        <option value="2" label="2 seconds"/>
+        <option value="4" label="4 seconds"/>
+        <option value="8" label="8 seconds" selected="true" />
+      </select>
+      <button id="send">Send helo (with server echo)</button><button id="disconnect">disconnect</button>
     </div>
     <canvas id="canvas" width="600" height="400" >
     </canvas>

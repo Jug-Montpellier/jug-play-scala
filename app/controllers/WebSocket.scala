@@ -28,8 +28,8 @@ import play.api.mvc.WebSocket
 
 object WebSockets extends Controller {
 
-  def connect(username: String) = WebSocket.async[JsValue] {
-    request => ConnectionActor.connect(username)
+  def connect(username: String, rate: Int) = WebSocket.async[JsValue] {
+    request => ConnectionActor.connect(username, rate)
   }
 
 }
@@ -42,15 +42,15 @@ object ConnectionActor {
   //    default ? Join("zozo")
   //  }
 
-  def connect(username: String): Future[(Iteratee[JsValue, _], Enumerator[JsValue])] = {
+  def connect(username: String, rate: Int): Future[(Iteratee[JsValue, _], Enumerator[JsValue])] = {
     lazy val default = {
       val connectionActor = Akka.system.actorOf(Props[ConnectionActor])
 
-      println("Build lazy actor")
+//      println("Build lazy actor")
 
       val cancellable =
         Akka.system.scheduler.schedule(0 milliseconds,
-          1000 milliseconds,
+          rate seconds,
           connectionActor,
           Tick)
 
@@ -58,12 +58,12 @@ object ConnectionActor {
     }
     (default ? Join(username)).map {
       case Connected(enumerator) => {
-        println("connected")
+//        println("connected")
         val iteratee = Iteratee.foreach[JsValue] { event =>
-          println("received " + event \ "text")
+//          println("received " + event \ "text")
           default ! Message(username, (event \ "text").as[String])
         }.mapDone { _ =>
-          println("Done")
+//          println("Done")
           default ! Quit(username)
         }
         (iteratee, enumerator)
@@ -127,7 +127,7 @@ class ConnectionActor extends Actor {
   }
 
   override def postStop() = {
-    println("Bye")
+//    println("Bye")
     super.postStop();
   }
 
