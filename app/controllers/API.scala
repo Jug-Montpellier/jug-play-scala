@@ -56,5 +56,4 @@ object API extends Controller
         }
     }
   }
-
 }
