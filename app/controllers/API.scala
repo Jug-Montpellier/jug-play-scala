@@ -69,7 +69,7 @@ object API extends Controller with DBSession with JSonFormats {
 
   }
 
-  def testInsert = Action {
+  def testsInsert = Action {
     implicit req =>
       withJSon { json =>
         json.validate[Test].map {
