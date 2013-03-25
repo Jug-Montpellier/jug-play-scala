@@ -15,8 +15,13 @@ import play.api.mvc.AnyContent
 import play.api.libs.json.JsValue
 import play.api.mvc.SimpleResult
 import play.api.libs.json.JsResult
+import java.sql.SQLException
+import play.api.libs.json.JsString
 
-object API extends Controller with DBSession with JSonFormats {
+
+object API extends Controller
+  with DBSession
+  with JsonAction {
 
   def speakers() = Action {
     withSession {
@@ -37,74 +42,19 @@ object API extends Controller with DBSession with JSonFormats {
   }
 
   def tests = Action {
-
     withSession {
       Ok(Json.toJson(Tests.all))
     }
   }
 
-  //  def withJSon[A](req: Request[AnyContent])(f: JsValue => A): Option[A] = {
-  //    req.body.asJson.map {json =>
-  //      f(json)
-  //    }.getOrElse {
-  //        BadRequest("Expecting Json data")
-  //      }
-  //    
-  //
-  //  }
-
-  def withJSon(f: JsValue => JsResult[SimpleResult[String]])(implicit req: Request[AnyContent]): SimpleResult[String] = {
-    req.body.asJson.map { json =>
-      f(json).recoverTotal {
-        e =>
-          {
-            println(e)
-            BadRequest("Dettected error: " + JsError.toFlatJson(e))
-          }
-      }
-
-    }.getOrElse {
-      BadRequest("Expecting Json data")
+  def testsInsert = JsonAction { json =>
+    json.validate[Test].map {
+      (test) =>
+        withSession {
+          Tests.autoInc.insert(test.name, test.nickname)
+          Ok(Json.toJson(test))
+        }
     }
-
   }
 
-  def testsInsert = Action {
-    implicit req =>
-      withJSon { json =>
-        json.validate[Test].map {
-
-          case test: Test => {
-            withSession {
-              Tests.autoInc.insert(test.name, test.nickname)
-            }
-            Ok(test.name)
-          }
-        }
-      }
-  }
-
-  def testsInsertRaw = Action {
-    req =>
-      req.body.asJson.map { json =>
-        json.validate[Test].map {
-
-          case test: Test => {
-            withSession {
-              Tests.autoInc.insert(test.name, test.nickname)
-            }
-            Ok(test.name)
-          }
-        }.recoverTotal {
-          e =>
-            {
-              println(e)
-              BadRequest("Dettected error: " + JsError.toFlatJson(e))
-            }
-        }
-      }.getOrElse {
-        BadRequest("Expecting Json data")
-      }
-
-  }
 }
