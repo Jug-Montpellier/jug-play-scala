@@ -3,7 +3,6 @@ package controllers
 import java.util.Date
 
 import scala.concurrent.Future
-import scala.concurrent.duration.Duration
 import scala.concurrent.duration.DurationInt
 
 import akka.actor.Actor
