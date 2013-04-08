@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>SoSimple</title>
+    <link rel="stylesheet" href="/assets/stylesheets/sosimple.css">
+  </head>
+  <body>
+    <h1>SoSimple</h1>
+    
+    <p>Hello world from Dart!</p>
+    
+    <div id="sample_container_id">
+      <p id="sample_text_id"></p>
+    </div>
+    <div>
+      <p>Insert test</p>
+      <button id="insert">Test insert</button>
+    </div>
+    <div>
+      <p>Simple demo of websocket push</p>
+      <button id="connect">Connect</button>
+      Choose rate of server push<select id="rate">
+        <option value="1" label="1 second" />
+        <option value="2" label="2 seconds"/>
+        <option value="4" label="4 seconds"/>
+        <option value="8" label="8 seconds" selected="true" />
+      </select>
+      <button id="send">Send helo (with server echo)</button><button id="disconnect">disconnect</button>
+    </div>
+    <canvas id="canvas" width="600" height="400" >
+    </canvas>
+
+    <script type="application/dart" src="/assets/sosimple.dart"></script>
+    <script src="/assets/packages/browser/dart.js"></script>
+  </body>
+</html>

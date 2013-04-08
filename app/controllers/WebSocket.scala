@@ -37,33 +37,27 @@ object ConnectionActor {
 
   implicit val timeout = Timeout(1 second)
 
-  //  def test = {
-  //    default ? Join("zozo")
-  //  }
+  def connect(username: String, rate: Int): Future[(Iteratee[JsValue, Unit], Enumerator[JsValue])] = {
 
-  def connect(username: String, rate: Int): Future[(Iteratee[JsValue, _], Enumerator[JsValue])] = {
-    lazy val default = {
-      val connectionActor = Akka.system.actorOf(Props[ConnectionActor])
+    val connectionActor = Akka.system.actorOf(Props[ConnectionActor])
 
-//      println("Build lazy actor")
+    val cancellable =
+      Akka.system.scheduler.schedule(0 milliseconds,
+        1 seconds,
+        connectionActor,
+        Tick)
 
-      val cancellable =
-        Akka.system.scheduler.schedule(0 milliseconds,
-          rate seconds,
-          connectionActor,
-          Tick)
-
-      connectionActor
-    }
-    (default ? Join(username)).map {
+    (connectionActor ? Join(username)).map {
       case Connected(enumerator) => {
-//        println("connected")
+        //        println("connected")
         val iteratee = Iteratee.foreach[JsValue] { event =>
-//          println("received " + event \ "text")
-          default ! Message(username, (event \ "text").as[String])
+          //          println("received " + event \ "text")
+          connectionActor ! Message(username, (event \ "text").as[String])
         }.mapDone { _ =>
-//          println("Done")
-          default ! Quit(username)
+          //          println("Done")
+          cancellable.cancel
+          
+          connectionActor ! Quit(username)
         }
         (iteratee, enumerator)
 
@@ -101,6 +95,9 @@ class ConnectionActor extends Actor {
     }
 
     case Message(username, text) => {
+      val runtime = Runtime.getRuntime()
+      runtime.runFinalization()
+      runtime.gc()
       notifyAll("msg", username, text)
     }
 
@@ -110,7 +107,10 @@ class ConnectionActor extends Actor {
       Akka.system.stop(self)
     }
 
-    case Tick => notifyAll("msg", "tick", "It is " + new Date)
+    case Tick =>
+      val runtime = Runtime.getRuntime()
+
+      notifyAll("msg", "tick", "Free mem: " + runtime.freeMemory())
 
   }
 
@@ -126,7 +126,7 @@ class ConnectionActor extends Actor {
   }
 
   override def postStop() = {
-//    println("Bye")
+    println("Bye")
     super.postStop();
   }
 

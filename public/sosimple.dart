@@ -2,88 +2,54 @@ import 'dart:html';
 import 'dart:json';
 import 'dart:math';
 
+import 'lib/mylib.dart';
+
 
 void main() {
  
   
-  String loc = document.window.location.toString();
-  int i = loc.indexOf("/assets/sosimple.html");
-  String base;
-  if(i==-1){
-    //Dart Editor ?
-    base="127.0.0.1:9000";
-    }else{
-     base = loc.substring(7, i);
-  }
+  String base = getServerBaseURL();
+
+  addReverseTextSample();
   
   addDBInsert(base);
   
-  Random rand = new Random(1); 
+  addWebSocketSample(base);  
   
-  CanvasElement canvas = query("#canvas");
-  
-  CanvasRenderingContext2D context = canvas.getContext("2d");
-  context.font = "20px sans-serif";
-  var webSocket;
-  
-  query("#sample_text_id")
-    ..text = "Click me!"
-    ..onClick.listen(reverseText);
-  
-  ButtonElement connect = query("#connect");
-  
-  ButtonElement send = query("#send");
-  send.disabled=true;
-  ButtonElement disconnect = query("#disconnect");
-  disconnect.disabled=true;
-  
-  connect.onClick.listen((e){
-    SelectElement rate = query("#rate");
-    String ws_url = "ws://${base}/ws/zozo/" + rate.selectedOptions.first.value;
-    window.alert(ws_url);
-    webSocket = new WebSocket(ws_url);
-    webSocket.onOpen.listen((e){
-      connect.disabled=true;
-      send.disabled=false;
-      disconnect.disabled=false;
-      
-      webSocket.onMessage.listen((e){
-        Map data = parse(e.data); 
-        // window.alert(data["message"]);
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        context.strokeText(data["message"], rand.nextInt(300), 30 + rand.nextInt(200));
-      });
-      
-    });
- 
-    
-  });
-  
-  
-  send.onClick.listen((e){
-    webSocket.send('{"text":"helo from dart"}');
-  });
+}
 
+addWebSocketSample(base) {
+  new WebSocketSample(base);
+}
+
+addReverseTextSample() {
+  query("#sample_text_id")
+  ..text = "Click me!"
+  ..onClick.listen(reverseText);
   
-  disconnect.onClick.listen((e){
-    webSocket.close();
-    connect.disabled=false;
-    send.disabled=true;
-    disconnect.disabled=true;
-    
-  });
-  
-  
+}
+
+String getServerBaseURL() {
+  String loc = document.window.location.toString();
+  int i = loc.indexOf("/", 7);
+  String base = loc.substring(7, i);
+  if(base.indexOf("3030") != -1)
+      base = "127.0.0.1:9000";
+  window.alert(base);
+  return base;
 }
 
 addDBInsert(String base) {
   ButtonElement insert = query("#insert");
   insert.onClick.listen((e){
-    HttpRequest req = new HttpRequest();
-    var url = "http://${base}/api/tests";
-    req.open("POST", url);
-    req.setRequestHeader("Content-type", "application/json");
-    req.send('{"name": "naine"}');
+  HttpSample httpSample = new HttpSample(base);
+  httpSample.post().then((String body){
+      window.alert(body);
+    }).catchError((e){
+      window.alert("Outch ... " + e.error);
+    });    
+  }).onError((e){
+    window.alert("Outch ..." + e.error);
   });
 }
 
