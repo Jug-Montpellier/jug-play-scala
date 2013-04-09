@@ -47,13 +47,5 @@ object API extends Controller
     }
   }
 
-  def testsInsert = JsonAction { json =>
-    json.validate[Test].map {
-      (test) =>
-        withSession {
-          Tests.autoInc.insert(test.name, test.nickname)
-          Ok(Json.toJson(test))
-        }
-    }
-  }
+  
 }

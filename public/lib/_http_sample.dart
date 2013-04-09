@@ -11,7 +11,7 @@ class HttpSample {
     Completer completer = new Completer();
     
     HttpRequest req = new HttpRequest();
-    req.open("POST", "http://${_base}/api/tests", async:true);
+    req.open("POST", "http://${_base}/admin/tests", async:true);
     req.setRequestHeader("Content-type", "application/json");
     req.send('{"name": "naine"}');
     

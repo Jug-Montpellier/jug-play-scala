@@ -17,7 +17,10 @@ GET     /api/speakers               controllers.API.speakers
 GET     /api/events                 controllers.API.events
 GET     /api/yearpartners           controllers.API.yearPartners
 GET     /api/tests                  controllers.API.tests
-POST    /api/tests                  controllers.API.testsInsert
+
+
+GET     /admin/tables              controllers.Admin.tables
+POST    /admin/tests               controllers.Admin.testsInsert
 
 GET     /admin/index                controllers.Admin.index
 
