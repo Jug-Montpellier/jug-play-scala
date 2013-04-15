@@ -1,6 +1,9 @@
-Montpellier JUG web site / play 2.1 / scala 2.10.0
+Montpellier JUG web site / play 2.1.1 / scala 2.10.1
 
-This project needs sbt-dart-plugin to be installed first in your local repository (https://github.com/cheleb/sbt-dart-plugin).
+This project needs local install (publish-local) of:
+  * sbt-dart-plugin https://github.com/cheleb/sbt-dart-plugin
+  * securesocial https://github.com/jaliss/securesocial
+
 
 
 $> export DART_HOME=/path/to/dart_sdk
