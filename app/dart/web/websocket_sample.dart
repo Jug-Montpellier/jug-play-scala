@@ -40,7 +40,7 @@ class WebSocketSample {
         Map data = parse(e.data); 
         // window.alert(data["message"]);
         context.clearRect(0, 0, canvas.width, canvas.height);
-        context.strokeText(data["message"], rand.nextInt(00), 30 + rand.nextInt(00));
+        context.strokeText(data["message"], rand.nextInt(200), 30 + rand.nextInt(200));
       });
       
     });
