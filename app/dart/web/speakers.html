@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Speakers</title>
+  </head>
+ 
+  <body>   
+    
+    
+    <div>
+     <span>Search for someone:</span>
+     <input type="text" bind-value="query">
+    <div>
+      <template instantiate='if noMatches'><span>No matches</span></template>
+      <template instantiate='if !noMatches'><span>Top results:</span></template>
+    </div>
+    <div >
+      <template iterate='speaker in results'>
+        <div style="display: inline-block; width:12em; height:11em;border:1px solid #000; padding:0.5em 0.5em;  margin: 1em;1em;">
+        <img src="{{speaker['photourl']}}" style="width:150px; height:150px; ">
+        <span style="margin-left:-8em;  background-color: rgba(255, 255, 255, 0.7); width:12em;">{{speaker["id"]}} {{speaker["fullname"]}}</span>
+        </div>
+  
+      </template>
+ 
+     </div>
+ 
+  </div>
+    
+    <script type="application/dart" src="speakers.dart"></script>
+    <!-- for this next line to work, your pubspec.yaml file must have a dependency on 'browser' -->
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>

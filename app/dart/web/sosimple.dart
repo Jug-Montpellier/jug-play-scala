@@ -2,12 +2,11 @@ import 'dart:html';
 import 'dart:json';
 import 'dart:math';
 
-import 'lib/mylib.dart';
+import 'mylib.dart';
 
 
 void main() {
  
-  
   String base = getServerBaseURL();
 
   addReverseTextSample();

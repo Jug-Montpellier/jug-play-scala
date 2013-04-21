@@ -15,5 +15,8 @@ $> cd -
 $> sbt
 $> run
 
- 
+To build the dist file for cloundfoundry: 
+$> sbt -Dconfig.file=conf/cloud.conf clean dist
 
+To deploy:
+$> vmc push --path=dist/jug-play-scala-1.0.zip

@@ -6,7 +6,7 @@ import 'dart:json';
 import 'dart:async';
 
 
-part '_http_sample.dart';
-part '_websocket_sample.dart';
+part 'http_sample.dart';
+part 'websocket_sample.dart';
 
 
