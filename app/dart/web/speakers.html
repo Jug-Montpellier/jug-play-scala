@@ -3,6 +3,7 @@
 <html>
   <head>
     <title>Speakers</title>
+    <link rel="components" href="speaker.html">
   </head>
  
   <body>   
@@ -17,11 +18,7 @@
     </div>
     <div >
       <template iterate='speaker in results'>
-        <div style="display: inline-block; width:12em; height:11em;border:1px solid #000; padding:0.5em 0.5em;  margin: 1em;1em;">
-        <img src="{{speaker['photourl']}}" style="width:150px; height:150px; ">
-        <span style="margin-left:-8em;  background-color: rgba(255, 255, 255, 0.7); width:12em;">{{speaker["id"]}} {{speaker["fullname"]}}</span>
-        </div>
-  
+        <speaker-box speaker="{{speaker}}" ></speaker-box>
       </template>
  
      </div>

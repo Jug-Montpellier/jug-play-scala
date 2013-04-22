@@ -227,15 +227,8 @@ object Speakers extends Table[Speaker]("speaker") {
   def all() = Query(Speakers).sortBy(_.id).list
 
   def isMember(email: String) = {
-    
-    
     val q = Query(Speakers).filter(s => s.email === email).filter(s => s.jugmember)
-    
-    
-    println(Query(q.length).selectStatement)
-    
     Query(q.length).first > 0
-    
   }
 
 }

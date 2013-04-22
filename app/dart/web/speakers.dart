@@ -28,7 +28,7 @@ main() {
 
 String getServerBaseURL() {
   String loc = document.window.location.toString();
-  int i = loc.indexOf("/", 7);
+  int i = loc.indexOf("/", 10);
   String base = loc.substring(0, i);
   if(base.indexOf("3030") != -1)
       base = "http://127.0.0.1:9000";
