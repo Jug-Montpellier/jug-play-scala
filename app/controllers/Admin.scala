@@ -11,6 +11,7 @@ import scala.collection.mutable.MutableList
 import service.MetadataService
 import service.Entity
 import service.Member
+import service.AuthorizationService
 
 object Admin extends Controller
   with securesocial.core.SecureSocial
@@ -20,20 +21,25 @@ object Admin extends Controller
   implicit val memberFormat = Json.format[Member]
   implicit val entityFormat = Json.format[Entity]
 
-  def index = SecuredAction(OnlyMe("olivier.nouguier@gmail.com")) {
-    implicit request => controllers.Assets.at("/public/admin", "index.html")(request)
+  def index = SecuredAction(AuthorizationService.HasAdminRole) {
+    implicit request =>
+      //controllers.Assets.at("/public/admin", "index.html")(request)
+    Ok(views.html.admin.index())
 
   }
 
-  def testsInsert = JsonAction { json =>
-    json.validate[Test].map {
-      (test) =>
-        withSession {
-          Tests.autoInc.insert(test.name, test.nickname)
-          Ok(Json.toJson(test))
+  def testsInsert =
+    SecuredJsonAction(OnlyMe("olivier.nouguier@gmail.com")) {
+      json =>
+        json.validate[Test].map {
+          (test) =>
+            withSession {
+              Tests.autoInc.insert(test.name, test.nickname)
+              Ok(Json.toJson(test))
+            }
         }
+
     }
-  }
 
   def tables = SecuredAction(OnlyMe("olivier.nouguier@gmail.com")) {
     implicit request =>

@@ -13,13 +13,11 @@ import Database.threadLocalSession
 import java.sql.Timestamp
 import java.util.Calendar
 
-
-object util  {
+object util {
   def now() = {
     new Timestamp(Calendar.getInstance().getTime().getTime())
   }
-  
- 
+
 }
 
 case class Test(id: Option[Int], name: String, nickname: Option[String])
@@ -31,7 +29,7 @@ object Tests extends Table[Test]("test") {
   def * = id.? ~ name ~ nickname.? <> (Test, Test.unapply _)
 
   def autoInc = name ~ nickname.? returning id
-  
+
   def all() = Query(Tests).list
 }
 
@@ -227,6 +225,18 @@ object Speakers extends Table[Speaker]("speaker") {
   def * = id.? ~ activity.? ~ compan.? ~ description.? ~ fullname.? ~ jugmember.? ~ memberfct.? ~ photourl.? ~ url.? ~ email.? ~ personalurl.? <> (Speaker, Speaker.unapply _)
 
   def all() = Query(Speakers).sortBy(_.id).list
+
+  def isMember(email: String) = {
+    
+    
+    val q = Query(Speakers).filter(s => s.email === email).filter(s => s.jugmember)
+    
+    
+    println(Query(q.length).selectStatement)
+    
+    Query(q.length).first > 0
+    
+  }
 
 }
 case class Tag(id: Option[Long], name: Option[String])

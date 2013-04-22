@@ -1,6 +1,7 @@
 import 'dart:html';
 import 'dart:json';
 import 'dart:math';
+import 'dart:async';
 
 import 'mylib.dart';
 
@@ -21,6 +22,7 @@ addWebSocketSample(base) {
   new WebSocketSample(base);
 }
 
+
 addReverseTextSample() {
   query("#sample_text_id")
   ..text = "Click me!"
@@ -34,21 +36,22 @@ String getServerBaseURL() {
   String base = loc.substring(7, i);
   if(base.indexOf("3030") != -1)
       base = "127.0.0.1:9000";
-  window.alert(base);
+ // window.alert(base);
   return base;
 }
 
 addDBInsert(String base) {
   ButtonElement insert = query("#insert");
   insert.onClick.listen((e){
-  HttpSample httpSample = new HttpSample(base);
-  httpSample.post().then((String body){
+    
+     HttpSample httpSample = new HttpSample(base);
+     httpSample.post().then((String body){
       window.alert(body);
     }).catchError((e){
-      window.alert("Outch ... " + e.error);
-    });    
-  }).onError((e){
-    window.alert("Outch ..." + e.error);
+      window.alert("Outch ... ${e}" );
+    });  
+     
+     
   });
 }
 

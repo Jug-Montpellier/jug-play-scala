@@ -16,10 +16,11 @@ class HttpSample {
     req.send('{"name": "naine"}');
     
     req.onLoadEnd.listen((e){
-      if(req.status == 200)
+      if(req.status == 200){
         completer.complete(req.responseText);
-      else
-        completer.completeError("Not 200 resp");
+      }else{
+        completer.completeError("Not 200 resp: ${req.status}");
+      }
     });
     
     return completer.future;

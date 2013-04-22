@@ -32,6 +32,9 @@ object EntitiesTest extends App {
    
    Tests.where(_.id===z.id.get).update(z2)
    
+   val email = "olivier.nouguier@gmail.com"
+   println(email + ": " + Speakers.isMember(email))
+   
 
     
     
