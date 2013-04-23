@@ -8,7 +8,7 @@
   <body>   
    <element name="speaker-box" constructor="SpeakerBox" >
      <template style="display: inline-block;">
-        <div style="display: inline-block; width:12em; height:11em;border:1px solid #000; padding:0.5em 0.5em;  margin: 1em;1em;">
+        <div class="speaker-box">
         <template instantiate="if speaker['photourl'] != '' "><img src="{{speaker['photourl']}}" style="width:150px; height:150px; "></template>
         <template instantiate="if speaker['photourl'] == '' "><img src="/assets/images/logo.png" style="width:150px; height:150px; "></template>
         <span style="margin-left:-8em;  background-color: rgba(255, 255, 255, 0.7); width:12em;">{{speaker["id"]}} {{speaker["fullname"]}}</span>
