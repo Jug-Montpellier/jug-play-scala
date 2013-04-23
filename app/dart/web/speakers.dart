@@ -3,7 +3,9 @@ import 'dart:async';
 import 'dart:json';
 
 import 'package:web_ui/watcher.dart' as watchers;
+import 'package:json_object/json_object.dart';
 
+import 'package:mtp_jug/mtp_jug.dart';
 
 String query = '';
 
@@ -12,27 +14,29 @@ List<String> speakers = [];
 List<String> get results {
   var lQuery = query.toLowerCase();
   var res = speakers.where((v) => v["fullname"].toLowerCase().contains(lQuery));
+//  res = res.map((e)=>new SpeakerImpl.fromMap(e));
   return (res.length <= 20) ? res.toList()
-      : (res.take(20).toList()..add({'id' : '', 'fullname': '... and many more'}));
+      : (res.take(20).toList()..add({'id' : '0','photourl':'', 'fullname': '... and many more'}));
 }
 
 bool get noMatches => results.isEmpty;
 
+
 main() {
-  
-  
-  HttpRequest.request(getServerBaseURL()+"/api/speakers").then(speakersLoader);
-  
-  
+  HttpRequest.request(JUGBaseURL+"/api/speakers").then(speakersLoader);
 }
 
-String getServerBaseURL() {
-  String loc = document.window.location.toString();
-  int i = loc.indexOf("/", 10);
-  String base = loc.substring(0, i);
-  if(base.indexOf("3030") != -1)
-      base = "http://127.0.0.1:9000";
-  return base;
+
+abstract class Speaker {
+  num id;
+  String fullname;
+  String photourl;
+}
+
+class SpeakerImpl extends JsonObject implements Speaker {
+  factory SpeakerImpl.fromMap(string) {
+    return new JsonObject.fromMap(string, new SpeakerImpl());
+  }
 }
 
 speakersLoader(HttpRequest req){

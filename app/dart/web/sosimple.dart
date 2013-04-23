@@ -3,7 +3,7 @@ import 'dart:json';
 import 'dart:math';
 import 'dart:async';
 
-import 'mylib.dart';
+import 'package:mtp_jug/mtp_jug.dart';
 
 
 void main() {

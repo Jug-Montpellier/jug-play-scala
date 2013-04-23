@@ -1,4 +1,4 @@
-part of mylib;
+part of mtp_jug;
 
 
 class HttpSample {

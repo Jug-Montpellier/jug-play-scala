@@ -1,14 +1,10 @@
 <!DOCTYPE html>
-
 <html>
   <head>
-    <title>Speakers</title>
+    <title>Montpellier JUG Speakers</title>
     <link rel="components" href="speaker.html">
   </head>
- 
   <body>   
-    
-    
     <div>
      <span>Search for someone:</span>
      <input type="text" bind-value="query">
@@ -20,13 +16,9 @@
       <template iterate='speaker in results'>
         <speaker-box speaker="{{speaker}}" ></speaker-box>
       </template>
- 
      </div>
- 
   </div>
-    
     <script type="application/dart" src="speakers.dart"></script>
-    <!-- for this next line to work, your pubspec.yaml file must have a dependency on 'browser' -->
     <script src="packages/browser/dart.js"></script>
   </body>
 </html>
