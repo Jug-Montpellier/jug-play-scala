@@ -7,11 +7,16 @@
  
   <body>
    <element name="speaker-box" constructor="SpeakerBox" >
-     <template style="display: inline-block;">
+     <template >
         <div class="speaker-box">
-        <img src="{{speaker['photourl']}}" style="width:150px; height:150px; ">
+        <img src="{{speaker['photourl']}}">
         <div style="background-color: rgba(255, 255, 255, 0.7)">{{speaker["fullname"]}}</div>
+         <div class="speaker-detail">
+            <div>{{speaker["fullname"]}}</div>
+            <div>{{speaker["description"]}}</div>
+         </div> 
         </div>
+       
      </template>
      <script type="application/dart">
       import 'package:web_ui/web_ui.dart';
@@ -21,20 +26,6 @@
       }
     </script>
    </element>
-   <element name="speaker-detail" constructor="SpeakerDetail" >
-     <template style="display: inline-block;">
-        <div class="speaker-detail">
-        <img src="{{speaker['photourl']}}" style="width:150px; height:150px; ">
-        <div style="background-color: rgba(255, 255, 255, 0.7)">{{speaker["fullname"]}}</div>
-        </div>
-     </template>
-     <script type="application/dart">
-      import 'package:web_ui/web_ui.dart';
-
-      class SpeakerDetail extends WebComponent {
-        Map speaker;
-      }
-    </script>
-   </element>
+  
   </body>
 </html>

@@ -1,7 +1,7 @@
 .speaker-box {
   display: inline-block;
-  width:200px;
-  height:200px;
+  width:150px;
+  height:150px;
   border:1px solid #000;
   padding:0.5em 0.5em;
   margin: 1em 1em;
@@ -11,18 +11,39 @@
 .speaker-detail {
   display: none;
   width:200px;
-  height:200px;
-  border:1px solid #000;
-  padding:0.5em 0.5em;
-  margin: 1em 1em;
-  vertical-align: top;
+  height:10px; 
 }
 
+.speaker-box:hover  .speaker-detail {
+  display: inline-block;
+  background-color: red;
+  width:600px;
+  position:absolute;
+  height: 400px;
+  left: left-100px;
+  border:1px solid #000;
+  padding:3em 3em;
+  margin: 1em 1em;
+}
 
 .speaker-box:hover {
     box-shadow: 0 0 5px #000;
+    z-index: -10;
+    background: #BBB;
 }
 
+img:hover{
+   -webkit-transform: scale(1.5);
+   -moz-transform: scale(1.5);
+   -ms-transform: scale(1.5);
+   -o-transform: scale(1.5);
+   transform: scale(1.5);
+   -webkit-transition: all .5s cubic-bezier( .6, 2, .4, 1);
+   -moz-transition: all .5s cubic-bezier( .6, 2, .4, 1);
+   -ms-transition: all .5s cubic-bezier( .6, 2, .4, 1);
+   -o-transition: all .5s cubic-bezier( .6, 2, .4, 1);
+   transition: all .5s cubic-bezier( .6, 2, .4, 1);
+}
 
 .float {
   float: left;
