@@ -5,13 +5,12 @@
     <title>speaker</title>
   </head>
  
-  <body>   
+  <body>
    <element name="speaker-box" constructor="SpeakerBox" >
      <template style="display: inline-block;">
         <div class="speaker-box">
-        <template instantiate="if speaker['photourl'] != '' "><img src="{{speaker['photourl']}}" style="width:150px; height:150px; "></template>
-        <template instantiate="if speaker['photourl'] == '' "><img src="/assets/images/logo.png" style="width:150px; height:150px; "></template>
-        <span style="margin-left:-8em;  background-color: rgba(255, 255, 255, 0.7); width:12em;">{{speaker["id"]}} {{speaker["fullname"]}}</span>
+        <img src="{{speaker['photourl']}}" style="width:150px; height:150px; ">
+        <div style="background-color: rgba(255, 255, 255, 0.7)">{{speaker["fullname"]}}</div>
         </div>
      </template>
      <script type="application/dart">
@@ -22,6 +21,20 @@
       }
     </script>
    </element>
+   <element name="speaker-detail" constructor="SpeakerDetail" >
+     <template style="display: inline-block;">
+        <div class="speaker-detail">
+        <img src="{{speaker['photourl']}}" style="width:150px; height:150px; ">
+        <div style="background-color: rgba(255, 255, 255, 0.7)">{{speaker["fullname"]}}</div>
+        </div>
+     </template>
+     <script type="application/dart">
+      import 'package:web_ui/web_ui.dart';
 
+      class SpeakerDetail extends WebComponent {
+        Map speaker;
+      }
+    </script>
+   </element>
   </body>
 </html>

@@ -16,7 +16,21 @@ object JSonFormats extends JSonFormats {
 
 trait JSonFormats {
 
-  implicit val speakerReads = Json.format[Speaker]
+
+//  implicit val speakerReads = new Format[Speaker] {
+//    def writes(s: Speaker) : JsValue = {
+//      Json.obj(
+//          "name" -> s.photourl.filterNot(i=>i=="").orElse(Some("zob")))
+//    }
+//    def reads(js: JsValue): JsResult[Speaker] = {
+//      JsSuccess(null)
+//    }
+//  }
+  
+  
+  implicit val speakerFormat = Json.format[Speaker]
+  
+  
 
   implicit val formatTimestamp = new Format[Timestamp] {
     def writes(ts: Timestamp): JsValue = JsString(ts.toString())

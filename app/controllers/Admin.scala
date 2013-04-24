@@ -23,9 +23,7 @@ object Admin extends Controller
 
   def index = SecuredAction(AuthorizationService.HasAdminRole) {
     implicit request =>
-      //controllers.Assets.at("/public/admin", "index.html")(request)
-    Ok(views.html.admin.index())
-
+      Ok(views.html.admin.index())
   }
 
   def testsInsert =

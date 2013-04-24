@@ -1,15 +1,31 @@
 .speaker-box {
   display: inline-block;
-  width:12em;
-  height:11em;
+  width:200px;
+  height:200px;
   border:1px solid #000;
   padding:0.5em 0.5em;
-  margin: 1em;1em;
+  margin: 1em 1em;
+  vertical-align: top;
+}
+
+.speaker-detail {
+  display: none;
+  width:200px;
+  height:200px;
+  border:1px solid #000;
+  padding:0.5em 0.5em;
+  margin: 1em 1em;
+  vertical-align: top;
 }
 
 
 .speaker-box:hover {
     box-shadow: 0 0 5px #000;
-    -webkit-transform-style: preserve-3d;
-    -webkit-transform:perspective(600) rotateY(-10deg);
+}
+
+
+.float {
+  float: left;
+  width: 50%;
+  margin: 1em 0;
 }

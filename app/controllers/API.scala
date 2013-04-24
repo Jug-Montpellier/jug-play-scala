@@ -18,7 +18,6 @@ import play.api.libs.json.JsResult
 import java.sql.SQLException
 import play.api.libs.json.JsString
 
-
 object API extends Controller
   with DBSession
   with JsonAction {
@@ -28,7 +27,6 @@ object API extends Controller
       Ok(Json.toJson(Speakers.all()))
     }
   }
-
   def events() = Action {
     withSession {
       Ok(Json.toJson(Events.all))
@@ -47,5 +45,4 @@ object API extends Controller
     }
   }
 
-  
 }

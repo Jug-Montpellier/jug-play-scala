@@ -13,10 +13,17 @@
       <template instantiate='if noMatches'><span>No matches</span></template>
       <template instantiate='if !noMatches'><span>Top results:</span></template>
     </div>
-    <div >
-      <template iterate='speaker in results'>
+    <div>
+      <div class="float">
+       <template iterate='speaker in results'>
         <speaker-box speaker="{{speaker}}" ></speaker-box>
-      </template>
+       </template>
+      </div>
+      <div class="float">
+       <template iterate='speaker in speakers'>
+        <speaker-detail speaker="{{speaker}}" ></speaker-detail>
+       </template>
+      </div>
      </div>
   </div>
     <script type="application/dart" src="speakers.dart"></script>
