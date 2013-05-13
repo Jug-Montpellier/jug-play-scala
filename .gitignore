@@ -8,10 +8,7 @@ bin/
 logs/
 target/
 app/dart/.buildlog
-app/dart/web/packages
 app/dart/pubspec.lock
-app/dart/packages/
 app/dart/web/out/
-public/out/
-public/packages
+packages
 manifest.yml
