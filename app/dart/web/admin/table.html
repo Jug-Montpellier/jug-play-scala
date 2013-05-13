@@ -9,22 +9,23 @@
   <body>
    <element name="table-box" constructor="TableBox" >
      <template >
-        <div class="{{clazz}}" >
+        <div class="{{clazz}}">
           <div style="background-color: rgba(255, 255, 255, 0.7)" on-click="close()">{{table["name"]}}</div>
           <div class="table-menu">
             <span style="background-color: rgba(255, 255, 255, 0.7)" on-click="listElement()">List</span>
             <span style="background-color: rgba(255, 255, 255, 0.7)" on-click="newElement()">New</span>
           </div>
-          <div instantiate="if selected">
-            <div instantiate="if insert"  style="background-color: #BBB">
+          <div template instantiate="if selected">
+            <div template instantiate="if insert"  style="background-color: #BBB">
            Insert
              <template iterate='field in table["members"]'>
                <field-box table="{{this}}" field="{{field}}" ></field-box>
                
              </template>
-            <button label="submit" on-click="submitElement()" />
+            <button label="submit" on-click="submitElement()">Zou</button>
+           </div>
          </div> 
-         <div instantiate="if list"  style="background-color: #BBB">
+         <div template instantiate="if list"  style="background-color: #BBB">
            list
          </div> 
         </div>
@@ -33,6 +34,7 @@
      <script type="application/dart">
       import 'dart:html';
       import 'package:web_ui/web_ui.dart';
+      import 'package:mtp_jug/mtp_jug.dart';
       
 
       class TableBox extends WebComponent {
@@ -77,7 +79,10 @@
         }
         
         void submitElement(){
-          window.alert(values.toString());
+        
+          new Crude().post(table["tableName"].toLowerCase(), values);
+        
+        
         }
         
       }

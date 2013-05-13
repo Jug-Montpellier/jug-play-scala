@@ -1,19 +1,29 @@
 part of mtp_jug;
 
 
-class HttpSample {
+class Crude {
+  
+  
+  static Crude instance;
   
   String _base;
   
-  HttpSample(this._base);
+  Crude._internal(this._base);
   
-  Future<String> post(){
+  factory Crude() {
+    if(instance == null)
+      instance = new Crude._internal(JUGBaseURL);
+    return instance;
+  }
+  
+  Future<String> post(String table, Map data){
     Completer completer = new Completer();
-    
+
     HttpRequest req = new HttpRequest();
-    req.open("POST", "http://${_base}/admin/tests", async:true);
+    req.open("POST", "${_base}/admin/" + table, async:true);
     req.setRequestHeader("Content-type", "application/json");
-    req.send('{"name": "naine"}');
+    
+    req.send(stringify(data));
     
     req.onLoadEnd.listen((e){
       if(req.status == 200){

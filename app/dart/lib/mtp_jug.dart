@@ -7,7 +7,7 @@ import 'dart:json';
 import 'dart:async';
 
 
-part 'src/http_sample.dart';
+part 'src/crude.dart';
 part 'src/websocket_sample.dart';
 
 

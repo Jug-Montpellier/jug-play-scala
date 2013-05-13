@@ -36,9 +36,11 @@ object Tests extends Table[Test]("test") {
 case class User(id: Option[Long], email: Option[String])
 
 object Users extends Table[User]("User") {
-  def id = column[Long]("id", O.PrimaryKey)
+  def id = column[Long]("id", O.NotNull, O.PrimaryKey, O.AutoInc)
   def email = column[String]("email")
   def * = id.? ~ email.? <> (User, User.unapply _)
+  
+  def autoInc = email.? returning id
 
   def all() = Query(Users).list
 }

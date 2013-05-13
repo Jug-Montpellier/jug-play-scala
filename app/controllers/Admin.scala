@@ -12,6 +12,8 @@ import service.MetadataService
 import service.Entity
 import service.Member
 import service.AuthorizationService
+import models.User
+import models.Users
 
 object Admin extends Controller
   with securesocial.core.SecureSocial
@@ -39,9 +41,22 @@ object Admin extends Controller
 
     }
 
-  def tables 
-  //= SecuredAction(OnlyMe("olivier.nouguier@gmail.com")) {
-  = Action {    
+  def userInsert =
+    //SecuredJsonAction(OnlyMe("olivier.nouguier@gmail.com")) {
+    JsonAction {
+      json =>
+        json.validate[User].map {
+          (user) =>
+            withSession {
+              Users.autoInc.insert(user.email)
+              Ok(Json.toJson(user))
+            }
+        }
+
+    }
+
+  def tables //= SecuredAction(OnlyMe("olivier.nouguier@gmail.com")) {
+  = Action {
     implicit request =>
       withSession {
 
