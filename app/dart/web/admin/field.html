@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Field</title>
+  </head>
+ 
+  <body>
+   <element name="field-box" constructor="FieldBox" >
+     <template >
+        <div class="field">
+        <div style="background-color: rgba(255, 255, 255, 0.7)">
+          <span instantiate="if !field['nullable']">*</span><span>{{field["name"]}}</span>
+        </div>
+         <div class="field-detail">
+          <div instantiate="if field['dataType']=='String'">
+            <textarea bind-value="value">
+            </textarea>
+          </div>
+          <div instantiate="if field['dataType']=='Long'">
+            <input type="text" bind-value="value" />
+          </div>
+         </div> 
+        </div>
+       
+     </template>
+     <script type="application/dart">
+      import 'dart:html';
+      import 'package:web_ui/web_ui.dart';
+      
+
+      class FieldBox extends WebComponent {
+       
+        Map field;
+        
+        TableBox table;
+        
+        set value(v) {
+         table.setValue(field["name"], v);
+         }
+        
+        String get value => table.getValue(field["name"]);
+        
+        
+        
+      }
+    </script>
+   </element>
+  
+  </body>
+</html>

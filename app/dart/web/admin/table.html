@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>speaker</title>
+    <link rel="import" href="field.html">
+  </head>
+ 
+  <body>
+   <element name="table-box" constructor="TableBox" >
+     <template >
+        <div class="{{clazz}}" >
+          <div style="background-color: rgba(255, 255, 255, 0.7)" on-click="close()">{{table["name"]}}</div>
+          <div class="table-menu">
+            <span style="background-color: rgba(255, 255, 255, 0.7)" on-click="listElement()">List</span>
+            <span style="background-color: rgba(255, 255, 255, 0.7)" on-click="newElement()">New</span>
+          </div>
+          <div instantiate="if selected">
+            <div instantiate="if insert"  style="background-color: #BBB">
+           Insert
+             <template iterate='field in table["members"]'>
+               <field-box table="{{this}}" field="{{field}}" ></field-box>
+               
+             </template>
+            <button label="submit" on-click="submitElement()" />
+         </div> 
+         <div instantiate="if list"  style="background-color: #BBB">
+           list
+         </div> 
+        </div>
+       
+     </template>
+     <script type="application/dart">
+      import 'dart:html';
+      import 'package:web_ui/web_ui.dart';
+      
+
+      class TableBox extends WebComponent {
+       
+        String clazz="table-box";
+      
+        bool selected=false;
+        
+        bool insert=false;
+        
+        bool list=false;
+        
+        Map values = {};
+        
+        Object getValue(String name){
+           if(values[name] == null)
+             return "";
+           return values[name];
+        }
+        
+        void setValue(String name, Object value){
+          values[name] = value;
+        }
+        
+        Map table;
+        
+        void close(){
+           clazz="table-box";
+           insert=list=selected=false;
+        }
+        
+        
+        void newElement(){
+          insert=selected = true;
+          clazz="table-box-selected";
+        }
+        
+        void listElement(){
+           list=selected = true;
+           clazz="table-box-selected";
+        
+        }
+        
+        void submitElement(){
+          window.alert(values.toString());
+        }
+        
+      }
+    </script>
+   </element>
+  
+  </body>
+</html>

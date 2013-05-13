@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Montpellier JUG Speakers</title>
+    <link rel="stylesheet" href="jug.css">
+    <link rel="import" href="table.html">
+  </head>
+  <body>   
+    <div>
+     <span>Table name filter:</span>
+     <input type="text" bind-value="query">
+    <div>
+      <template instantiate='if noMatches'><span>No matches</span></template>
+      <template instantiate='if !noMatches'><span>Top results:</span></template>
+    </div>
+    <div>
+    
+       <template iterate='table in results'>
+        <table-box table="{{table}}" ></table-box>
+       </template>
+    
+     </div>
+  </div>
+    <script type="application/dart" src="database.dart"></script>
+    <script src="packages/browser/dart.js"></script>
+  </body>
+</html>
