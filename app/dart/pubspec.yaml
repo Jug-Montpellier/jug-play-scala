@@ -4,4 +4,4 @@ dependencies:
   json_object: any
   browser: any
   web_ui: any
-  play_webuic: 0.4.7+3.3
+  play_webuic: any
