@@ -22,3 +22,16 @@ String _getServerBaseURL() {
       base = "http://127.0.0.1:9000";
    return base;
  }
+
+
+abstract class Table {
+  Object getValue(String name);
+  
+  void setValue(String name, Object value);
+}
+
+
+abstract class Database {
+   void tableSelected(Table table);  
+}
+

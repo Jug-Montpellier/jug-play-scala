@@ -6,23 +6,65 @@
     <link rel="import" href="table.html">
   </head>
   <body>   
-    <div>
-     <span>Table name filter:</span>
-     <input type="text" bind-value="query">
-    <div>
-      <template instantiate='if noMatches'><span>No matches</span></template>
-      <template instantiate='if !noMatches'><span>Top results:</span></template>
-    </div>
-    <div>
-    
-    
-       <template iterate='table in results'>
-        <table-box table="{{table}}" ></table-box>
-       </template>
-    
-     </div>
-  </div>
-    <script type="application/dart" src="database.dart"></script>
-    <script src="packages/browser/dart.js"></script>
-  </body>
+    <element name="database-box" constructor="DatabaseBox">
+     <template>
+      <div template instantiate="if selected==null">
+        <span>Table name filter:</span>
+        <input type="text" bind-value="filter" >
+        <div>
+          <template instantiate='if noMatches'><span>No matches</span></template>
+          <template instantiate='if !noMatches'><span>Top results:</span></template>
+        </div>
+        <div>
+          <template iterate='table in results'>
+            <table-box database="{{this}}" table="{{table}}"></table-box>
+          </template>
+        </div>
+      </div>
+      <div template instantiate="if selected!=null">
+            <insert-box database="{{this}}" table="{{selected}}"></insert-box>
+      </div>
+      </template>
+      <script type="application/dart">
+import 'dart:html';
+import 'dart:json';
+import 'dart:async';
+import 'package:web_ui/web_ui.dart';
+import 'package:web_ui/watcher.dart' as watchers;
+import 'package:mtp_jug/mtp_jug.dart';
+import 'package:json_object/json_object.dart';
+
+
+class DatabaseBox extends WebComponent with Database {
+
+  String filter = '';
+
+  Map selected = null;
+
+  List<Map> tables = [];
+
+  void tableSelected(Map table){
+     this.selected = table;
+  }
+
+  DatabaseBox(){
+      HttpRequest.request(JUGBaseURL+"/admin/tables").then(tablesLoader);
+  }
+
+  List<String> get results {
+    var lQuery = filter.toLowerCase();
+    var res = tables.where((v) => v["name"].toLowerCase().contains(lQuery));
+    return res.toList();
+  }
+
+  bool get noMatches => results.isEmpty;
+
+  tablesLoader(HttpRequest req){
+    tables = parse(req.responseText);
+    watchers.dispatch();
+  }
+}
+      </script>
+   </element>
+ </body>
 </html>

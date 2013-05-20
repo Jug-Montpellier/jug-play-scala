@@ -10,9 +10,12 @@ scalacOptions ++= Seq("-target:jvm-1.7","-language:postfixOps")
 
 dartDev := true
 
-dartEntryPoints += "sosimple.dart"
+dartNoJs := true
+
+//dartEntryPoints += "sosimple.dart"
+dartEntryPoints ++= Seq("sosimple.dart")
 
 dartWebUIEntryPoints += "speakers.html"
 
-dartWebUIEntryPoints += "admin/database.html"
+dartWebUIEntryPoints += "admin/dbbrowser.html"
 

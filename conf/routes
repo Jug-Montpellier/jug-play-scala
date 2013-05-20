@@ -21,7 +21,7 @@ GET     /api/tests                  controllers.API.tests
 
 GET     /admin/tables              controllers.Admin.tables
 POST    /admin/tests               controllers.Admin.testsInsert
-POST    /admin/user                controllers.Admin.userInsert
+POST    /admin/crude/:table        controllers.Admin.insert(table: String)
 
 GET     /admin/index                controllers.Admin.index
 

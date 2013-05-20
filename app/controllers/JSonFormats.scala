@@ -30,6 +30,8 @@ trait JSonFormats {
   
   implicit val speakerFormat = Json.format[Speaker]
   
+  implicit val talkFormat = Json.format[Talk]
+  
   implicit val userFormat = Json.format[User]
 
   implicit val formatTimestamp = new Format[Timestamp] {

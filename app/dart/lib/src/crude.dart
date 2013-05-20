@@ -20,7 +20,7 @@ class Crude {
     Completer completer = new Completer();
 
     HttpRequest req = new HttpRequest();
-    req.open("POST", "${_base}/admin/" + table, async:true);
+    req.open("POST", "${_base}/admin/crude/" + table, async:true);
     req.setRequestHeader("Content-type", "application/json");
     
     req.send(stringify(data));

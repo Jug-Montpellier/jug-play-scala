@@ -10,16 +10,17 @@
    <element name="field-box" constructor="FieldBox" >
      <template >
         <div class="field">
-        <div style="background-color: rgba(255, 255, 255, 0.7)">
           <span template instantiate="if !field['nullable']">*</span><span>{{field["name"]}}</span>
-        </div>
          <div class="field-detail">
-          <div template instantiate="if field['dataType']=='String'">
-            <textarea bind-value="value">
+          <div template instantiate="if input == 'email'">
+            <input class="validated" type="email" bind-value="value" size="{{size}}" />
+          </div>
+          <div template instantiate="if input == 'textarea'">
+            <textarea bind-value="value" cols="{{cols}}" rows="{{rows}}">
             </textarea>
           </div>
-          <div template instantiate="if field['dataType']=='Long'">
-            <input type="text" bind-value="value" />
+          <div template instantiate="if input == null">
+            <input type="text" bind-value="value" size="10" />
           </div>
          </div> 
         </div>
@@ -28,16 +29,30 @@
      <script type="application/dart">
       import 'dart:html';
       import 'package:web_ui/web_ui.dart';
+      import 'package:mtp_jug/mtp_jug.dart';
       
 
       class FieldBox extends WebComponent {
        
         Map field;
         
-        TableBox table;
+        Table table;
+        Map get constraints => field["constraints"];
+        num get size => constraints["size"];
+        num get rows => constraints["rows"];
+        num get cols => constraints["cols"];
+        Map get props => field["props"];
         
+        String get input {
+          return props["input"];
+        }
         set value(v) {
-         table.setValue(field["name"], v);
+         if(field["dataType"] == "Boolean")
+           table.setValue(field["name"], v == "true");
+         else if(field["dataType"] == "Int")
+           table.setValue(field["name"], int.parse(v));
+         else
+           table.setValue(field["name"], v);
          }
         
         String get value => table.getValue(field["name"]);

@@ -6,8 +6,9 @@ import java.sql.Types
 import java.sql.ResultSet
 import java.sql.DatabaseMetaData
 
+case class Constraints(size: Option[Int], cols: Option[Int], rows: Option[Int])
 case class Entity(name: String, tableName: String, members: List[Member])
-case class Member(name: String, dataType: String, pk: Boolean, nullable: Boolean, autoInc: Boolean) {
+case class Member(name: String, dataType: String, pk: Boolean, nullable: Boolean, autoInc: Boolean, constraints: Constraints, props: Map[String, String]) {
   def option = nullable || autoInc
 }
 
@@ -20,16 +21,13 @@ object MetadataService {
     val entities = MutableList[Entity]()
     while (tables.next()) {
 
-      entities +=  dumpTable(metadata, tables.getString("table_name"))
-      
+      entities += dumpTable(metadata, tables.getString("table_name"))
 
     }
     entities
 
   }
- 
 
- 
   def entityName(tableName: String) = {
     tableName.substring(0, 1).toUpperCase() + tableName.substring(1)
   }
@@ -66,13 +64,27 @@ object MetadataService {
     val columns = metadata.getColumns(threadLocalSession.conn.getCatalog(), "public", tableName, null);
     while (columns.next()) {
       val columnName = columns.getString("COLUMN_NAME")
-      members += Member(columnName, columnType(columns.getInt("DATA_TYPE")), pks.contains(columnName), columns.getBoolean("NULLABLE"), columns.getString("IS_AUTOINCREMENT") == "YES")
+      val remarks = columns.getString("REMARKS")
+      
+      
+      
+      val props = if (remarks == null)
+        Map[String,String]()
+      else
+        remarks.split(",").map(_.trim()).map(_.split("=")).map(a=> (a(0) -> a(1))).toMap
+      
+        
+      def p(key: String) = {
+        props.get(key).map(Integer.parseInt(_))
+      }  
+      val c = Constraints( p("size"), p("cols"), p("rows") )
+        
+      members += Member(columnName, columnType(columns.getInt("DATA_TYPE")), pks.contains(columnName), columns.getBoolean("NULLABLE"), columns.getString("IS_AUTOINCREMENT") == "YES", c, props)
+      
     }
 
     Entity(entityName(tableName), tableName, members.toList)
 
   }
-
- 
 
 }

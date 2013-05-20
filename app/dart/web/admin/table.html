@@ -9,25 +9,12 @@
   <body>
    <element name="table-box" constructor="TableBox" >
      <template >
-        <div class="{{clazz}}">
+        <div class="table-box">
           <div style="background-color: rgba(255, 255, 255, 0.7)" on-click="close()">{{table["name"]}}</div>
           <div class="table-menu">
             <span style="background-color: rgba(255, 255, 255, 0.7)" on-click="listElement()">List</span>
             <span style="background-color: rgba(255, 255, 255, 0.7)" on-click="newElement()">New</span>
           </div>
-          <div template instantiate="if selected">
-            <div template instantiate="if insert"  style="background-color: #BBB">
-           Insert
-             <template iterate='field in table["members"]'>
-               <field-box table="{{this}}" field="{{field}}" ></field-box>
-               
-             </template>
-            <button label="submit" on-click="submitElement()">Zou</button>
-           </div>
-         </div> 
-         <div template instantiate="if list"  style="background-color: #BBB">
-           list
-         </div> 
         </div>
        
      </template>
@@ -37,7 +24,50 @@
       import 'package:mtp_jug/mtp_jug.dart';
       
 
-      class TableBox extends WebComponent {
+      /**
+        A RDBMS Table 
+      */
+      class TableBox extends WebComponent with Table {
+       
+        Database database;
+       
+        Map table;   
+        
+        void newElement(){
+          database.tableSelected(table);
+        }
+        
+        void listElement(){
+           database.tableSelected(table);
+        }     
+      }
+    </script>
+   </element>
+    <element name="insert-box" constructor="InsertBox" >
+     <template >
+        <div class="table-box-selected">
+          <div style="background-color: rgba(255, 255, 255, 0.7)" on-click="close()">{{table["name"]}}</div>
+            <div style="background-color: #BBB">
+             <template iterate='field in writableFields(table["members"])'>
+               <field-box table="{{this}}" field="{{field}}" ></field-box>
+             </template>
+            <button label="submit" on-click="submitElement()">Zou</button>
+           </div>
+         </div> 
+        </div>
+     </template>
+     <script type="application/dart">
+      import 'dart:html';
+      import 'package:web_ui/web_ui.dart';
+      import 'package:mtp_jug/mtp_jug.dart';
+      
+
+      /**
+        A RDBMS Table 
+      */
+      class InsertBox extends WebComponent with Table {
+       
+        Database database;
        
         String clazz="table-box";
       
@@ -48,6 +78,13 @@
         bool list=false;
         
         Map values = {};
+        
+        /**
+         Filter out autoInc fields.
+        */
+        List writableFields(List<Map> fields){
+           return fields.where( (f) => !f["autoInc"] ).toList();
+        }
         
         Object getValue(String name){
            if(values[name] == null)
@@ -62,20 +99,19 @@
         Map table;
         
         void close(){
-           clazz="table-box";
-           insert=list=selected=false;
+            database.tableSelected(null);
         }
         
         
         void newElement(){
           insert=selected = true;
-          clazz="table-box-selected";
+          clazz="";
         }
         
         void listElement(){
            list=selected = true;
            clazz="table-box-selected";
-        
+           database.tableSelected(this);
         }
         
         void submitElement(){
@@ -88,6 +124,5 @@
       }
     </script>
    </element>
-  
   </body>
 </html>

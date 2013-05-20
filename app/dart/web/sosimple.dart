@@ -11,8 +11,6 @@ void main() {
 
   addReverseTextSample();
   
-  addDBInsert(base);
-  
   addWebSocketSample(base);  
   
 }
@@ -37,21 +35,6 @@ String getServerBaseURL() {
       base = "127.0.0.1:9000";
  // window.alert(base);
   return base;
-}
-
-addDBInsert(String base) {
-  ButtonElement insert = query("#insert");
-  insert.onClick.listen((e){
-    
-     HttpSample httpSample = new HttpSample(base);
-     httpSample.post().then((String body){
-      window.alert(body);
-    }).catchError((e){
-      window.alert("Outch ... ${e}" );
-    });  
-     
-     
-  });
 }
 
 void reverseText(MouseEvent event) {

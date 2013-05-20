@@ -69,7 +69,7 @@ case class Event(id: Option[Long], capacity: Int, date: Option[Timestamp], descr
   }
 }
 object Events extends Table[Event]("event") {
-  def id = column[Long]("id", O.PrimaryKey)
+  def id = column[Long]("id", O.NotNull, O.PrimaryKey, O.AutoInc)
   def capacity = column[Int]("capacity")
   def date = column[Timestamp]("date")
   def description = column[String]("description")
@@ -82,6 +82,8 @@ object Events extends Table[Event]("event") {
   def partner_id = column[Long]("partner_id")
   def * = id.? ~ capacity ~ date.? ~ description.? ~ location.? ~ map.? ~ open ~ registrationurl.? ~ report.? ~ title.? ~ partner_id.? <> (Event, Event.unapply _)
 
+  def autoInc = capacity ~ date.? ~ description.? ~ location.? ~ map.? ~ open ~ registrationurl.? ~ report.? ~ title.? ~ partner_id.? returning  id
+  
   def last(n: Int) = Query(Events).sortBy(_.date.desc.nullsLast).take(n).list
 
   def pastAndUpComing = Query(Events).sortBy(_.date.desc.nullsLast).list.partition { e => e.date.get.before(util.now()) }
@@ -141,13 +143,15 @@ object Events extends Table[Event]("event") {
 case class Eventpartner(id: Option[Long], description: Option[String], logourl: Option[String], name: Option[String], url: Option[String])
 
 object Eventpartners extends Table[Eventpartner]("eventpartner") {
-  def id = column[Long]("id", O.PrimaryKey)
+  def id = column[Long]("id", O.NotNull, O.PrimaryKey, O.AutoInc)
   def description = column[String]("description")
   def logourl = column[String]("logourl")
   def name = column[String]("name")
   def url = column[String]("url")
   def * = id.? ~ description.? ~ logourl.? ~ name.? ~ url.? <> (Eventpartner, Eventpartner.unapply _)
 
+  def autoInc() = description.? ~ logourl.? ~ name.? ~ url.? returning id 
+  
   def all() = Query(Eventpartners).list
 
   def getById(id: Long) = {
@@ -164,13 +168,15 @@ object Eventpartners extends Table[Eventpartner]("eventpartner") {
 case class News(id: Option[Long], comments: Boolean, content: Option[String], date: Option[Timestamp], title: Option[String])
 
 object Newss extends Table[News]("news") {
-  def id = column[Long]("id", O.PrimaryKey)
+  def id = column[Long]("id", O.NotNull, O.PrimaryKey, O.AutoInc)
   def comments = column[Boolean]("comments")
   def content = column[String]("content")
   def date = column[Timestamp]("date")
   def title = column[String]("title")
   def * = id.? ~ comments ~ content.? ~ date.? ~ title.? <> (News, News.unapply _)
 
+  def autoInc = comments ~ content.? ~ date.? ~ title.? returning id 
+  
   def all() = Query(Newss).list
 }
 case class Participation(id: Option[Long], code: Option[String], status: Option[Int], event_id: Option[Long], user_id: Option[Long])
@@ -246,7 +252,7 @@ object Tags extends Table[Tag]("tag") {
 case class Talk(id: Option[Long], orderinevent: Int, teaser: Option[String], datetime: Option[String], title: Option[String], event_id: Option[Long], speaker_id: Option[Long])
 
 object Talks extends Table[Talk]("talk") {
-  def id = column[Long]("id", O.PrimaryKey)
+  def id = column[Long]("id", O.NotNull ,O.PrimaryKey, O.AutoInc)
   def orderinevent = column[Int]("orderinevent")
   def teaser = column[String]("teaser")
   def datetime = column[String]("datetime")
@@ -254,6 +260,9 @@ object Talks extends Table[Talk]("talk") {
   def event_id = column[Long]("event_id")
   def speaker_id = column[Long]("speaker_id")
   def * = id.? ~ orderinevent ~ teaser.? ~ datetime.? ~ title.? ~ event_id.? ~ speaker_id.? <> (Talk, Talk.unapply _)
+
+  def autoInc = orderinevent ~ teaser.? ~ datetime.? ~ title.? ~ event_id.? ~ speaker_id.? returning id 
+  def insert(o: Talk )  = autoInc.insert(o.orderinevent, o.teaser, o.datetime, o.title, o.event_id, o.speaker_id)
 
   def speaker = foreignKey("speaker_id", speaker_id, Speakers)(_.id)
   def event = foreignKey("event_id", event_id, Events)(_.id)
