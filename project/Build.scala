@@ -13,6 +13,7 @@ object ApplicationBuild extends Build {
     "com.typesafe.slick" %% "slick" % "1.0.0",
     "org.hibernate" % "hibernate-entitymanager" % "3.6.9.Final",
     "securesocial" %% "securesocial" % "master-SNAPSHOT",
+//    "net.orcades" %% "play-crude-macros" % "0.1-SNAPSHOT",
     jdbc)
 
   val main = play.Project(appName, appVersion, appDependencies).settings( // Add your own project settings here      

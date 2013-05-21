@@ -42,6 +42,14 @@ object Admin extends Controller
 
     }
 
+  def zozo[A](json: JsValue) = json.validate[User].map {
+    (user) =>
+      withSession {
+        Users.autoInc.insert(user.email)
+        Ok(Json.toJson(user))
+      }
+  }
+
   def insert(table: String) =
     //SecuredJsonAction(OnlyMe("olivier.nouguier@gmail.com")) {
     JsonAction {

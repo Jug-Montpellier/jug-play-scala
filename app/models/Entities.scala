@@ -20,9 +20,19 @@ object util {
 
 }
 
+trait Cruded[A] {
+  def insert(a: A) : Int
+}
+
 case class Test(id: Option[Int], name: String, nickname: Option[String])
 
-object Tests extends Table[Test]("test") {
+object Tests extends Tests with Cruded[Test]{
+ 
+  def insert(o: Test ) = autoInc.insert( o.name, o.nickname)
+  def all() = Query(Tests).list
+}
+
+class Tests extends Table[Test]("test") {
   def id = column[Int]("id", O.NotNull, O.PrimaryKey, O.AutoInc)
   def name = column[String]("name")
   def nickname = column[String]("nickname")
@@ -30,8 +40,9 @@ object Tests extends Table[Test]("test") {
 
   def autoInc = name ~ nickname.? returning id
 
-  def all() = Query(Tests).list
+  
 }
+
 
 case class User(id: Option[Long], email: Option[String])
 

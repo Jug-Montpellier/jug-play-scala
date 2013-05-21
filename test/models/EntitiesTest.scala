@@ -7,7 +7,7 @@ import Database.threadLocalSession
 //import scala.slick.driver.PostgresDriver.simple._
 
 
-
+import play.crude.CrudeMacro._
 
 object EntitiesTest extends App {
   Database.forURL("jdbc:postgresql:jug", "test", "test", driver = "org.postgresql.Driver") withSession {
@@ -35,7 +35,7 @@ object EntitiesTest extends App {
    val email = "olivier.nouguier@gmail.com"
    println(email + ": " + Speakers.isMember(email))
    
-
+   insert("zozo")
     
     
   }
