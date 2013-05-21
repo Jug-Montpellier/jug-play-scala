@@ -42,43 +42,30 @@ object Admin extends Controller
 
     }
 
-  def zozo[A](json: JsValue) = json.validate[User].map {
-    (user) =>
-      withSession {
-        Users.autoInc.insert(user.email)
-        Ok(Json.toJson(user))
-      }
-  }
+  import play.crude.CrudeMacro._
 
-  def insert(table: String) =
+  //  def zozo(json: JsValue) = insert[User](json) 
+
+  def insertIntoTable(table: String) =
     //SecuredJsonAction(OnlyMe("olivier.nouguier@gmail.com")) {
     JsonAction {
       json =>
-        table match {
-          case "user" =>
-            json.validate[User].map {
-              (user) =>
-                withSession {
-                  Users.autoInc.insert(user.email)
-                  Ok(Json.toJson(user))
-                }
-            }
-          case "event" =>
-            json.validate[Event].map {
-              (event) =>
-                withSession {
-                  Events.autoInc.insert(event.capacity, event.date, event.description, event.location, event.map, event.open, event.registrationurl, event.report, event.title, event.partner_id)
-                  Ok(Json.toJson(event))
-                }
-            }
-          case "talk" =>
-            json.validate[Talk].map {
-              (talk) =>
-                withSession {
+        withSession {
+          table match {
+            case "user" => 
+              insert(json, _.validate[User], Users, (u:User) => Ok(Json.toJson(u)))
+              
+              
+            case "event" =>
+                   insert(json, _.validate[Event], Events, (u:Event) => Ok(Json.toJson(u)))
+              
+            case "talk" =>
+              json.validate[Talk].map {
+                (talk) =>
                   val v = Talks.insert(talk)
                   Ok(Json.toJson(v))
-                }
-            }
+              }
+          }
         }
 
     }

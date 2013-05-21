@@ -20,9 +20,7 @@ object util {
 
 }
 
-trait Cruded[A] {
-  def insert(a: A) : Int
-}
+import play.crude.Cruded
 
 case class Test(id: Option[Int], name: String, nickname: Option[String])
 
@@ -46,7 +44,11 @@ class Tests extends Table[Test]("test") {
 
 case class User(id: Option[Long], email: Option[String])
 
-object Users extends Table[User]("User") {
+object Users extends Users with Cruded[User] {
+  def insert(o: User ) = autoInc.insert( o.email)
+}
+
+class Users  extends Table[User]("User") {
   def id = column[Long]("id", O.NotNull, O.PrimaryKey, O.AutoInc)
   def email = column[String]("email")
   def * = id.? ~ email.? <> (User, User.unapply _)
@@ -79,7 +81,8 @@ case class Event(id: Option[Long], capacity: Int, date: Option[Timestamp], descr
     Array()
   }
 }
-object Events extends Table[Event]("event") {
+
+object Events extends Table[Event]("event") with Cruded[Event] {
   def id = column[Long]("id", O.NotNull, O.PrimaryKey, O.AutoInc)
   def capacity = column[Int]("capacity")
   def date = column[Timestamp]("date")
@@ -93,6 +96,9 @@ object Events extends Table[Event]("event") {
   def partner_id = column[Long]("partner_id")
   def * = id.? ~ capacity ~ date.? ~ description.? ~ location.? ~ map.? ~ open ~ registrationurl.? ~ report.? ~ title.? ~ partner_id.? <> (Event, Event.unapply _)
 
+
+  def insert(o: Event ) = autoInc.insert( o.capacity, o.date, o.description, o.location, o.map, o.open, o.registrationurl, o.report, o.title, o.partner_id)
+  
   def autoInc = capacity ~ date.? ~ description.? ~ location.? ~ map.? ~ open ~ registrationurl.? ~ report.? ~ title.? ~ partner_id.? returning  id
   
   def last(n: Int) = Query(Events).sortBy(_.date.desc.nullsLast).take(n).list

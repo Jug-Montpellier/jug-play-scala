@@ -35,7 +35,7 @@ object EntitiesTest extends App {
    val email = "olivier.nouguier@gmail.com"
    println(email + ": " + Speakers.isMember(email))
    
-   insert("zozo")
+   //insert("zozo")
     
     
   }
