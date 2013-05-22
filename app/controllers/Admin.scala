@@ -42,23 +42,20 @@ object Admin extends Controller
 
     }
 
-  import play.crude.CrudeMacro._
+ // import play.crude.CrudeMacro._
 
-  //  def zozo(json: JsValue) = insert[User](json) 
+  def insert[A](v: JsValue => JsResult[A], cruded: Cruded[A])(implicit json: JsValue) = v(json).map(a=>cruded.insert(a)).map(r=>Ok(Json.toJson(r)))
+    
 
   def insertIntoTable(table: String) =
     //SecuredJsonAction(OnlyMe("olivier.nouguier@gmail.com")) {
     JsonAction {
-      json =>
+      implicit json =>
         withSession {
           table match {
-            case "user" => 
-              insert(json, _.validate[User], Users, (u:User) => Ok(Json.toJson(u)))
-              
-              
-            case "event" =>
-                   insert(json, _.validate[Event], Events, (u:Event) => Ok(Json.toJson(u)))
-              
+            case "user" => insert(_.validate[User], Users)
+            case "event" => insert(_.validate[Event], Events)
+
             case "talk" =>
               json.validate[Talk].map {
                 (talk) =>

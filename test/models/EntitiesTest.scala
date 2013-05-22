@@ -7,7 +7,6 @@ import Database.threadLocalSession
 //import scala.slick.driver.PostgresDriver.simple._
 
 
-import play.crude.CrudeMacro._
 
 object EntitiesTest extends App {
   Database.forURL("jdbc:postgresql:jug", "test", "test", driver = "org.postgresql.Driver") withSession {
@@ -22,7 +21,7 @@ object EntitiesTest extends App {
 //    Tests.autoInc.insert("Olivier", Some("zozo"));
 //    Tests.autoInc.insert("NoNick", None);
 
-   val q = for { c <- Tests if c.id===5 } yield c
+   val q = for { c <- Tests if c.id===5L } yield c
 
    val i = q.take(1);
    
