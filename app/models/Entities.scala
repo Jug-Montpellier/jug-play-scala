@@ -128,8 +128,6 @@ object Newss extends Newss
 
 object Participations extends Participations
 
-object Play_evolutionss extends Play_evolutionss
-
 
 object Polls extends Polls
 
@@ -206,7 +204,7 @@ class Events extends Table[Event]("event") with Cruded[Event]{
 }
 case class Eventpartner(id: Option[Long],description: Option[String],logourl: Option[String],name: Option[String],url: Option[String])
 
-class Eventpartners extends Table[Eventpartner]("eventpartner"){
+class Eventpartners extends Table[Eventpartner]("eventpartner") with Cruded[Eventpartner]{
   def id = column[Long]("id", O.NotNull ,O.PrimaryKey, O.AutoInc)
   def description = column[String]("description")
   def logourl = column[String]("logourl")
@@ -220,7 +218,7 @@ class Eventpartners extends Table[Eventpartner]("eventpartner"){
 }
 case class News(id: Option[Long],comments: Boolean,content: Option[String],date: Option[Timestamp],title: Option[String])
 
-class Newss extends Table[News]("news"){
+class Newss extends Table[News]("news") with Cruded[News]{
   def id = column[Long]("id", O.NotNull ,O.PrimaryKey, O.AutoInc)
   def comments = column[Boolean]("comments")
   def content = column[String]("content")
@@ -234,7 +232,7 @@ class Newss extends Table[News]("news"){
 }
 case class Participation(id: Option[Long],code: Option[String],status: Option[Int],event_id: Option[Long],user_id: Option[Long])
 
-class Participations extends Table[Participation]("participation"){
+class Participations extends Table[Participation]("participation") with Cruded[Participation]{
   def id = column[Long]("id", O.NotNull ,O.PrimaryKey, O.AutoInc)
   def code = column[String]("code")
   def status = column[Int]("status")
@@ -246,25 +244,10 @@ class Participations extends Table[Participation]("participation"){
   def insert(o: Participation ) = autoInc.insert( o.code, o.status, o.event_id, o.user_id)
   def all() = Query(Participations).list
 }
-case class Play_evolutions(id: Int,hash: String,applied_at: Timestamp,apply_script: Option[String],revert_script: Option[String],state: Option[String],last_problem: Option[String])
 
-class Play_evolutionss extends Table[Play_evolutions]("play_evolutions"){
-  def id = column[Int]("id", O.NotNull ,O.PrimaryKey, O.AutoInc)
-  def hash = column[String]("hash")
-  def applied_at = column[Timestamp]("applied_at")
-  def apply_script = column[String]("apply_script")
-  def revert_script = column[String]("revert_script")
-  def state = column[String]("state")
-  def last_problem = column[String]("last_problem")
-  def * = id ~ hash ~ applied_at ~ apply_script.? ~ revert_script.? ~ state.? ~ last_problem.? <> (Play_evolutions, Play_evolutions.unapply _)
-
-  def autoInc = hash ~ applied_at ~ apply_script.? ~ revert_script.? ~ state.? ~ last_problem.? returning id 
-  def insert(o: Play_evolutions ) = autoInc.insert( o.hash, o.applied_at, o.apply_script, o.revert_script, o.state, o.last_problem)
-  def all() = Query(Play_evolutionss).list
-}
 case class Poll(id: Option[Long],question: String,expirydate: Option[Timestamp],visible: Option[Boolean])
 
-class Polls extends Table[Poll]("poll"){
+class Polls extends Table[Poll]("poll") with Cruded[Poll]{
   def id = column[Long]("id", O.NotNull ,O.PrimaryKey, O.AutoInc)
   def question = column[String]("question")
   def expirydate = column[Timestamp]("expirydate")
@@ -277,7 +260,7 @@ class Polls extends Table[Poll]("poll"){
 }
 case class Speaker(id: Option[Long],activity: Option[String],compan: Option[String],description: Option[String],fullname: Option[String],jugmember: Option[Boolean],memberfct: Option[String],photourl: Option[String],url: Option[String],email: Option[String],personalurl: Option[String])
 
-class Speakers extends Table[Speaker]("speaker"){
+class Speakers extends Table[Speaker]("speaker") with Cruded[Speaker]{
   def id = column[Long]("id", O.NotNull ,O.PrimaryKey, O.AutoInc)
   def activity = column[String]("activity")
   def compan = column[String]("compan")
@@ -308,7 +291,7 @@ class Tags extends Table[Tag]("tag"){
 }
 case class Talk(id: Option[Long],orderinevent: Int,teaser: Option[String],datetime: Option[String],title: Option[String],event_id: Option[Long],speaker_id: Option[Long])
 
-class Talks extends Table[Talk]("talk"){
+class Talks extends Table[Talk]("talk") with Cruded[Talk]{
   def id = column[Long]("id", O.NotNull ,O.PrimaryKey, O.AutoInc)
   def orderinevent = column[Int]("orderinevent")
   def teaser = column[String]("teaser")

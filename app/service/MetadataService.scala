@@ -7,7 +7,7 @@ import java.sql.ResultSet
 import java.sql.DatabaseMetaData
 
 case class Constraints(size: Option[Int], cols: Option[Int], rows: Option[Int])
-case class Entity(name: String, tableName: String, members: List[Member])
+case class Entity(name: String, tableName: String, members: List[Member], props: Map[String, String])
 case class Member(name: String, dataType: String, pk: Boolean, nullable: Boolean, autoInc: Boolean, constraints: Constraints, props: Map[String, String]) {
   def option = nullable || autoInc
 }
@@ -16,12 +16,15 @@ object MetadataService {
 
   def allTables = {
 
+    
     val metadata = threadLocalSession.metaData
     val tables = metadata.getTables(threadLocalSession.conn.getCatalog(), "public", null, Array("TABLE"))
     val entities = MutableList[Entity]()
     while (tables.next()) {
-
-      entities += dumpTable(metadata, tables.getString("table_name"))
+      
+      val entity = dumpTable(metadata, tables.getString("table_name"))
+      if(entity != null)
+        entities += entity
 
     }
     entities
@@ -48,6 +51,16 @@ object MetadataService {
 
   def dumpTable(metadata: DatabaseMetaData, tableName: String): Entity = {
 
+    val rs = metadata.getTables(threadLocalSession.conn.getCatalog(), "public", tableName, null)
+    val props = if (rs.next()) {
+      getPropertiesFromRemarks(rs.getString("REMARKS"))
+    } else {
+      Map[String,String]()
+    }
+    
+    if(props.isEmpty)
+      return null
+
     def getPks(): Set[String] = {
       val rs = metadata.getPrimaryKeys(threadLocalSession.conn.getCatalog(), "public", tableName);
       val set = MutableList[String]()
@@ -65,26 +78,25 @@ object MetadataService {
     while (columns.next()) {
       val columnName = columns.getString("COLUMN_NAME")
       val remarks = columns.getString("REMARKS")
-      
-      
-      
-      val props = if (remarks == null)
-        Map[String,String]()
-      else
-        remarks.split(",").map(_.trim()).map(_.split("=")).map(a=> (a(0) -> a(1))).toMap
-      
-        
+
+      val props = getPropertiesFromRemarks(remarks)
+
       def p(key: String) = {
         props.get(key).map(Integer.parseInt(_))
-      }  
-      val c = Constraints( p("size"), p("cols"), p("rows") )
-        
+      }
+      val c = Constraints(p("size"), p("cols"), p("rows"))
+
       members += Member(columnName, columnType(columns.getInt("DATA_TYPE")), pks.contains(columnName), columns.getBoolean("NULLABLE"), columns.getString("IS_AUTOINCREMENT") == "YES", c, props)
-      
+
     }
 
-    Entity(entityName(tableName), tableName, members.toList)
+    Entity(entityName(tableName), tableName, members.toList, props)
 
   }
+
+  def getPropertiesFromRemarks(remarks: String) = if (remarks == null)
+    Map[String, String]()
+  else
+    remarks.split(",").map(_.trim()).map(_.split("=")).map(a => (a(0) -> a(1))).toMap
 
 }

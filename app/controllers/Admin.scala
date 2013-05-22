@@ -55,13 +55,9 @@ object Admin extends Controller
           table match {
             case "user" => insert(_.validate[User], Users)
             case "event" => insert(_.validate[Event], Events)
-
-            case "talk" =>
-              json.validate[Talk].map {
-                (talk) =>
-                  val v = Talks.insert(talk)
-                  Ok(Json.toJson(v))
-              }
+            case "talk" => insert(_.validate[Talk], Talks)
+            case "speaker" => insert(_.validate[Speaker], Speakers)
+            case "news" => insert(_.validate[News], Newss)
           }
         }
 
