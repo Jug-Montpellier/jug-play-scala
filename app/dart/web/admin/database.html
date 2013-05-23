@@ -8,7 +8,7 @@
   <body>   
     <element name="database-box" constructor="DatabaseBox">
      <template>
-      <div template instantiate="if selected==null">
+      <div template instantiate="if listTable">
         <span>Table name filter:</span>
         <input type="text" bind-value="filter" >
         <div>
@@ -21,7 +21,7 @@
           </template>
         </div>
       </div>
-      <div template instantiate="if selected!=null">
+      <div template instantiate="if tableDetail">
             <insert-box database="{{this}}" table="{{selected}}"></insert-box>
       </div>
       </template>
@@ -35,16 +35,21 @@ import 'package:mtp_jug/mtp_jug.dart';
 import 'package:json_object/json_object.dart';
 
 
+
 class DatabaseBox extends WebComponent with Database {
+Map selected = null;
+
+bool get listTable => selected==null;
+
+bool get tableDetail => selected != null; 
 
   String filter = '';
 
-  Map selected = null;
 
   List<Map> tables = [];
 
   void tableSelected(Map table){
-     this.selected = table;
+     selected = table;
   }
 
   DatabaseBox(){

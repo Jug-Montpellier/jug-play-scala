@@ -48,8 +48,8 @@ object Admin extends Controller
     
 
   def insertIntoTable(table: String) =
-    //SecuredJsonAction(OnlyMe("olivier.nouguier@gmail.com")) {
-    JsonAction {
+   SecuredJsonAction(AuthorizationService.HasAdminRole) {
+   // JsonAction {
       implicit json =>
         withSession {
           table match {

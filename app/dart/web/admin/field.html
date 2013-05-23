@@ -10,7 +10,7 @@
    <element name="field-box" constructor="FieldBox" >
      <template >
         <div class="field">
-          <span template instantiate="if !field['nullable']">*</span><span>{{field["name"]}}</span>
+          <span template instantiate="if mandatory">*</span><span>{{field["name"]}}</span>
          <div class="field-detail">
           <div template instantiate="if input == 'email'">
             <input class="validated" type="email" bind-value="value" size="{{size}}" />
@@ -20,7 +20,7 @@
             </textarea>
           </div>
           <div template instantiate="if input == null">
-            <input type="text" bind-value="value" size="10" />
+            <input type="text" bind-value="value" size="{{size}}" />
           </div>
          </div> 
         </div>
@@ -34,18 +34,29 @@
 
       class FieldBox extends WebComponent {
        
+        def(val, def ) {
+          if(val==null)
+          return def;
+          else
+           return val;
+        }
+       
         Map field;
         
         Table table;
+        // General
+        bool get mandatory => !field['nullable'];
+        num get size => def(constraints["size"], 100);
+        Map get props => field["props"];
+        String get input => props["input"];
+        
         Map get constraints => field["constraints"];
-        num get size => constraints["size"];
+
+        //Text area constraint        
         num get rows => constraints["rows"];
         num get cols => constraints["cols"];
-        Map get props => field["props"];
         
-        String get input {
-          return props["input"];
-        }
+        
         set value(v) {
          if(field["dataType"] == "Boolean")
            table.setValue(field["name"], v == "true");

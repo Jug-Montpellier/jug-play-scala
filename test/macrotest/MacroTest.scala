@@ -2,7 +2,7 @@ package macrotest
 
 import play.api.libs.json.JsValue
 import play.api.libs.json.JsString
-import play.crude.CrudeMacro._
+//import play.crude.CrudeMacro._
 import models._
 import play.api.libs.json.Json
 import scala.slick.session.Database

@@ -10,7 +10,7 @@
    <element name="table-box" constructor="TableBox" >
      <template >
         <div class="table-box">
-          <div style="background-color: rgba(255, 255, 255, 0.7)" on-click="close()">{{table["name"]}}</div>
+          <div style="background-color: rgba(255, 255, 255, 0.7)">{{table["name"]}}</div>
           <div class="table-menu">
             <span style="background-color: rgba(255, 255, 255, 0.7)" on-click="listElement()">List</span>
             <span style="background-color: rgba(255, 255, 255, 0.7)" on-click="newElement()">New</span>
@@ -54,7 +54,6 @@
             <button label="submit" on-click="submitElement()">Zou</button>
            </div>
          </div> 
-        </div>
      </template>
      <script type="application/dart">
       import 'dart:html';
