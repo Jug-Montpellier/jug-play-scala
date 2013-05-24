@@ -5,14 +5,28 @@ This project needs local install (publish-local) of:
   * securesocial https://github.com/jaliss/securesocial
 
 
+DartSDK must be declared as an environement variable. 
 
-$> export DART_SDK=/path/to/dart_sdk
+`$> export DART_SDK=/path/to/dart_sdk`
 
-$> cd jug-play-scala
+Enter in the cloned repository `$> cd jug-play-scala`
+
+$> sbt
+
+$> run
+
+## To build the dist file for cloundfoundry: 
+
+$> sbt -Dconfig.file=conf/cloud.conf clean dist
+
+## To deploy:
+
+$> vmc push --path=dist/jug-play-scala-1.0.zip
+
+
+## Install dart dependencies.
 
 $> cd dart
-
-#Install dart dependencies.
 
 $> $DART_SDK/bin/pub install 
 
@@ -22,10 +36,3 @@ $> sbt
 
 $> run
 
-== To build the dist file for cloundfoundry: 
-
-$> sbt -Dconfig.file=conf/cloud.conf clean dist
-
-== To deploy:
-
-$> vmc push --path=dist/jug-play-scala-1.0.zip
