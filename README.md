@@ -6,17 +6,26 @@ This project needs local install (publish-local) of:
 
 
 
-$> export DART_HOME=/path/to/dart_sdk
+$> export DART_SDK=/path/to/dart_sdk
+
 $> cd jug-play-scala
-$> cd public
+
+$> cd dart
+
 #Install dart dependencies.
-$> $DART_HOME/bin/pub install 
+
+$> $DART_SDK/bin/pub install 
+
 $> cd -
+
 $> sbt
+
 $> run
 
-To build the dist file for cloundfoundry: 
+== To build the dist file for cloundfoundry: 
+
 $> sbt -Dconfig.file=conf/cloud.conf clean dist
 
-To deploy:
+== To deploy:
+
 $> vmc push --path=dist/jug-play-scala-1.0.zip
