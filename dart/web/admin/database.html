@@ -29,44 +29,44 @@ import 'dart:html';
 import 'dart:json';
 import 'dart:async';
 import 'package:web_ui/web_ui.dart';
-import 'package:web_ui/watcher.dart' as watchers;
+
 import 'package:mtp_jug/mtp_jug.dart';
 import 'package:json_object/json_object.dart';
 
 
 
 class DatabaseBox extends WebComponent with Database {
-Map selected = null;
+    @observable
+    Map selected = null;
 
-bool get listTable => selected==null;
+    bool get listTable => selected==null;
 
-bool get tableDetail => selected != null; 
+    bool get tableDetail => selected != null; 
 
-  String filter = '';
+    @observable
+    String filter = '';
 
+    List tables = toObservable([]);
 
-  List<Map> tables = [];
+    void tableSelected(Map table){
+        selected = table;
+    }
 
-  void tableSelected(Map table){
-     selected = table;
-  }
+    DatabaseBox(){
+        HttpRequest.request(JUGBaseURL+"/admin/tables").then(tablesLoader);
+    }
 
-  DatabaseBox(){
-      HttpRequest.request(JUGBaseURL+"/admin/tables").then(tablesLoader);
-  }
+    List<String> get results {
+        var lQuery = filter.toLowerCase();
+        var res = tables.where((v) => v["name"].toLowerCase().contains(lQuery));
+        return res.toList();
+    }
 
-  List<String> get results {
-    var lQuery = filter.toLowerCase();
-    var res = tables.where((v) => v["name"].toLowerCase().contains(lQuery));
-    return res.toList();
-  }
+    bool get noMatches => results.isEmpty;
 
-  bool get noMatches => results.isEmpty;
-
-  tablesLoader(HttpRequest req){
-    tables = parse(req.responseText);
-    watchers.dispatch();
-  }
+    tablesLoader(HttpRequest req){
+    tables.addAll(parse(req.responseText));
+    }
 }
       </script>
    </element>
