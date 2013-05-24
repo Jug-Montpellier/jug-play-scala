@@ -11,17 +11,17 @@ DartSDK must be declared as an environement variable.
 
 Enter in the cloned repository `$> cd jug-play-scala`
 
-$> sbt
+Launch sbt: `$> sbt`
 
-$> run
+Run the server: `$> run`
 
 ## To build the dist file for cloundfoundry: 
 
-$> sbt -Dconfig.file=conf/cloud.conf clean dist
+`$> sbt -Dconfig.file=conf/cloud.conf clean dist`
 
 ## To deploy:
 
-$> vmc push --path=dist/jug-play-scala-1.0.zip
+`$> vmc push --path=dist/jug-play-scala-1.0.zip`
 
 
 ## Install dart dependencies.
