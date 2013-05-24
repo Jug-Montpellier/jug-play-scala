@@ -9,8 +9,7 @@
     <element name="database-box" constructor="DatabaseBox">
      <template>
       <div template instantiate="if listTable">
-        <span>Table name filter:</span>
-        <input type="text" bind-value="filter" >
+        <input type="text" bind-value="filter" placeholder="filter">
         <div>
           <template instantiate='if noMatches'><span>No matches</span></template>
           <template instantiate='if !noMatches'><span>Top results:</span></template>

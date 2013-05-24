@@ -7,8 +7,7 @@ dist/
 bin/
 logs/
 target/
-app/dart/.buildlog
-app/dart/pubspec.lock
-app/dart/web/out/
+dart/.buildlog
+dart/pubspec.lock
 packages
 manifest.yml
