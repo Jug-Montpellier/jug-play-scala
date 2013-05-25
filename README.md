@@ -3,7 +3,7 @@ Montpellier JUG web site / play 2.1.1 / scala 2.10.1
 This project needs local install (publish-local) of:
   * sbt-dart-plugin https://github.com/cheleb/sbt-dart-plugin
   * securesocial https://github.com/jaliss/securesocial
-
+ 
 
 DartSDK must be declared as an environement variable. 
 
