@@ -6,7 +6,7 @@ scalacOptions ++= Seq("-target:jvm-1.7","-language:postfixOps")
 
 //scalacOptions += "-feature"
 
-
+resolvers += "Central repository" at "http://repo1.maven.org/maven2/"
 
 //dartDev := true
 
