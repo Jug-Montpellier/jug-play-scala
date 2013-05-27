@@ -24,13 +24,9 @@ Run the server: `$> run`
 `$> vmc push --path=dist/jug-play-scala-1.0.zip`
 
 
-## Install dart dependencies.
-
-$> cd dart
+## Reinstall dart dependencies.
 
 $> $DART_SDK/bin/pub install 
-
-$> cd -
 
 $> sbt
 
