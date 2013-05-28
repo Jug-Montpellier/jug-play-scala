@@ -17,6 +17,7 @@ import java.util.Calendar
 
 trait Cruded[A] {
   def insert(a: A) : Long
+  def all : List[A]
 }
 
 

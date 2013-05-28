@@ -47,6 +47,23 @@ object Admin extends Controller
   def insert[A](v: JsValue => JsResult[A], cruded: Cruded[A])(implicit json: JsValue) = v(json).map(a=>cruded.insert(a)).map(r=>Ok(Json.toJson(r)))
     
 
+  def all(table: String) =
+   SecuredAction(AuthorizationService.HasAdminRole) {
+   // JsonAction {
+      implicit request =>
+        withSession {
+          table match {
+            case "users" => Ok(Json.toJson(Users.all))
+            case "events" => Ok(Json.toJson(Events.all))
+            case "talks" => Ok(Json.toJson(Talks.all))
+            case "speakers" => Ok(Json.toJson(Speakers.all))
+            case "news" => Ok(Json.toJson(Newss.all))
+          }
+        }
+
+    }
+  
+  
   def insertIntoTable(table: String) =
    SecuredJsonAction(AuthorizationService.HasAdminRole) {
    // JsonAction {
