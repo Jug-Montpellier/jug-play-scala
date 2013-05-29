@@ -44,12 +44,12 @@ object Admin extends Controller
 
  // import play.crude.CrudeMacro._
 
-  def insert[A](v: JsValue => JsResult[A], cruded: Cruded[A])(implicit json: JsValue) = v(json).map(a=>cruded.insert(a)).map(r=>Ok(Json.toJson(r)))
+  def insert[A](v: JsValue => JsResult[A], cruded: Cruded[A])(implicit json: JsValue): JsResult[SimpleResult[JsValue]] = v(json).map(a=>cruded.insert(a)).map(r=>Ok(Json.toJson(r)))
     
 
-  def all(table: String) =
-   SecuredAction(AuthorizationService.HasAdminRole) {
-   // JsonAction {
+  def all(table: String): Action[AnyContent] =
+   //SecuredAction(AuthorizationService.HasAdminRole) {
+    Action {
       implicit request =>
         withSession {
           table match {
@@ -58,6 +58,8 @@ object Admin extends Controller
             case "talks" => Ok(Json.toJson(Talks.all))
             case "speakers" => Ok(Json.toJson(Speakers.all))
             case "news" => Ok(Json.toJson(Newss.all))
+            case "tests" => Ok(Json.toJson(Tests.all()))
+            case _ => NotFound
           }
         }
 

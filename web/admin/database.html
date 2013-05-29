@@ -23,6 +23,9 @@
       <div template instantiate="if tableDetail">
             <insert-box database="{{this}}" table="{{selected}}"></insert-box>
       </div>
+      <div template instantiate="if tableList">
+            <list-box database="{{this}}" table="{{selected}}"></list-box>
+      </div>
       </template>
       <script type="application/dart">
 import 'dart:html';
@@ -39,17 +42,24 @@ class DatabaseBox extends WebComponent with Database {
     @observable
     Map selected = null;
 
+    @observable 
+    String intent;
+
     bool get listTable => selected==null;
 
-    bool get tableDetail => selected != null; 
+    bool get tableDetail => selected != null && intent == "insert"; 
+    
+    bool get tableList => selected != null && intent == "list"; 
 
     @observable
     String filter = '';
 
     List tables = toObservable([]);
 
-    void tableSelected(Map table){
+
+    void selectedFor(Map table, String intent){
         selected = table;
+        this.intent = intent;
     }
 
     DatabaseBox(){

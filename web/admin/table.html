@@ -22,27 +22,75 @@
       import 'dart:html';
       import 'package:web_ui/web_ui.dart';
       import 'package:mtp_jug/mtp_jug.dart';
-      
+
 
       /**
         A RDBMS Table 
       */
-      class TableBox extends WebComponent with Table {
+      class TableBox extends WebComponent {
        
         Database database;
        
         Map table;   
         
         void newElement(){
-          database.tableSelected(table);
+          database.selectedFor(table, "insert");
         }
         
         void listElement(){
-           database.tableSelected(table);
+           database.selectedFor(table, "list");
         }     
       }
     </script>
    </element>
+
+   <element name="list-box" constructor="ListBox">
+       <template>
+
+           <div class="table-box-selected">
+               <div on-click="close()">close {{table["name"]}}</div>
+               <div>
+                   <table>
+
+                   <template iterate='toto in items'>
+                       <tr>
+                           <td></td>
+                       </tr>
+                   </template>
+
+                   </table>
+
+               </div>
+           </div>
+
+       </template>
+       <script type="application/dart">
+      import 'dart:html';
+      import 'package:web_ui/web_ui.dart';
+      import 'package:mtp_jug/mtp_jug.dart';
+
+      /**
+        A RDBMS Table 
+      */
+      class ListBox extends WebComponent {
+       
+        Database database;
+       
+        
+        Map table;
+        
+        void close(){
+            database.selectedFor(null, null);
+        }
+        
+        List get items => [];
+        
+       
+        
+      }
+    </script>
+   </element>
+
     <element name="insert-box" constructor="InsertBox" >
      <template >
         <div class="table-box-selected">
@@ -98,7 +146,7 @@
         Map table;
         
         void close(){
-            database.tableSelected(null);
+            database.selectedFor(null, null);
         }
         
         
@@ -107,11 +155,7 @@
           clazz="";
         }
         
-        void listElement(){
-           list=selected = true;
-           clazz="table-box-selected";
-           database.tableSelected(this);
-        }
+       
         
         void submitElement(){
         

@@ -11,3 +11,5 @@ dart/.buildlog
 dart/pubspec.lock
 packages
 manifest.yml
+.idea/
+.idea_modules/

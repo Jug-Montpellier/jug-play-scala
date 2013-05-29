@@ -20,9 +20,8 @@ GET     /api/tests                  controllers.API.tests
 
 
 GET     /admin/tables              controllers.Admin.tables
-POST    /admin/tests               controllers.Admin.testsInsert
-POST    /admin/crude/:table        controllers.Admin.insertIntoTable(table: String)
-GET     /admin/crude/:table        controllers.Admin.all(table: String)
+POST    /admin/api/:table        controllers.Admin.insertIntoTable(table: String)
+GET     /admin/api/:table        controllers.Admin.all(table: String)
 
 GET     /admin/index                controllers.Admin.index
 
