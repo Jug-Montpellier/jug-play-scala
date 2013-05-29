@@ -7,7 +7,7 @@ import java.sql.ResultSet
 import java.sql.DatabaseMetaData
 
 case class Constraints(size: Option[Int], cols: Option[Int], rows: Option[Int])
-case class Entity(name: String, tableName: String, members: List[Member], props: Map[String, String])
+case class Entity(name: String, tableName: String, uri: String , members: List[Member], props: Map[String, String])
 case class Member(name: String, dataType: String, pk: Boolean, nullable: Boolean, autoInc: Boolean, constraints: Constraints, props: Map[String, String]) {
   def option = nullable || autoInc
 }
@@ -33,6 +33,14 @@ object MetadataService {
 
   def entityName(tableName: String) = {
     tableName.substring(0, 1).toUpperCase() + tableName.substring(1)
+  }
+  
+  def uri(tableName: String) = {
+    tableName match {
+      case name if name.endsWith("s") => name.toLowerCase()
+      case name if name.endsWith("y") => name.substring(0, name.length()-1) + "ies"
+      case name => name.toLowerCase() + "s"
+    }
   }
 
   def columnType(t: Int) = {
@@ -90,7 +98,9 @@ object MetadataService {
 
     }
 
-    Entity(entityName(tableName), tableName, members.toList, props)
+    
+    
+    Entity(entityName(tableName), tableName, uri(tableName), members.toList, props)
 
   }
 
