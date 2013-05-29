@@ -49,23 +49,29 @@
 
            <div class="table-box-selected">
                <div on-click="close()">close {{table["name"]}}</div>
-               <div>
-                   <table>
-
-                   <template iterate='toto in items'>
-                       <tr>
-                           <td></td>
-                       </tr>
-                   </template>
-
+                <div>
+                   <table border="2">
+                     <tbody template iterate='item in items'>
+                     <tr template iterate="field in fields">
+                      <td template instantiate='if field["props"]["render"] == "img"'>
+                        <img src='{{item[field["name"]]}}' />
+                      </td>
+                      <td template instantiate='if field["props"]["render"] == null'>
+                        <span template instantiate='if field["props"]["render"] == null'>
+                          {{item[field["name"]]}}
+                        </span>
+                      </td>
+                     </tr>
+                    </tbody>
                    </table>
-
                </div>
            </div>
 
        </template>
        <script type="application/dart">
       import 'dart:html';
+      import 'dart:json';
+      import 'dart:async';
       import 'package:web_ui/web_ui.dart';
       import 'package:mtp_jug/mtp_jug.dart';
 
@@ -76,14 +82,31 @@
        
         Database database;
        
+        Crude crude = new Crude();
         
-        Map table;
+        @observable
+        Map theTable={};
+        
+        List rows = toObservable([]);
+        
+        ListBox(){
+          
+        }
+        
+        Map get table => theTable;
+        
+        List get fields => theTable["members"].toList();        
+        
+        set table(Map table) {
+         this.theTable = table;
+         HttpRequest.request(JUGBaseURL+"/admin/api/" + table["uri"]).then((req)=>rows.addAll(parse(req.responseText)));
+        }
         
         void close(){
             database.selectedFor(null, null);
         }
         
-        List get items => [];
+        List get items => rows;
         
        
         

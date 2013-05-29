@@ -37,5 +37,26 @@ class Crude {
     
   }
   
+  Future<String> all(String table, Map data){
+    Completer completer = new Completer();
+
+    HttpRequest req = new HttpRequest();
+    req.open("GET", "${_base}/admin/api/" + table, async:true);
+    req.setRequestHeader("Content-type", "application/json");
+    
+    //req.send(stringify(data));
+    
+    req.onLoadEnd.listen((e){
+      if(req.status == 200){
+        completer.complete(req.responseText);
+      }else{
+        completer.completeError("Not 200 resp: ${req.status}");
+      }
+    });
+    
+    return completer.future;
+    
+  }
+  
 }
 
