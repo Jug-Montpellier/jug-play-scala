@@ -12,14 +12,14 @@
         <div class="field">
           <span template instantiate="if mandatory">*</span><span>{{field["name"]}}</span>
          <div class="field-detail">
-          <div template instantiate="if input == 'email'">
+          <div template instantiate="if renderAsEmail">
             <input class="validated" type="email" bind-value="value" size="{{size}}" />
           </div>
-          <div template instantiate="if input == 'textarea'">
+          <div template instantiate="if renderAsTextArea">
             <textarea bind-value="value" cols="{{cols}}" rows="{{rows}}">
             </textarea>
           </div>
-          <div template instantiate="if input == null">
+          <div template instantiate="if renderDefault">
             <input type="text" bind-value="value" size="{{size}}" />
           </div>
          </div> 
@@ -51,6 +51,12 @@
         String get input => props["input"];
         
         Map get constraints => field["constraints"];
+
+        bool get renderAsEmail => input == 'email';
+        
+        bool get renderDefault => !renderAsEmail && !renderAsTextArea;
+        
+        bool get renderAsTextArea => input == 'textarea';
 
         //Text area constraint        
         num get rows => constraints["rows"];
