@@ -18,3 +18,5 @@ addSbtPlugin("play" % "sbt-plugin" % "2.1.1")
 
 addSbtPlugin("net.orcades" % "sbt-dart-plugin" % "0.2.2-SNAPSHOT")
 
+//addSbtPlugin("net.orcades" % "sbt-slick-plugin" % "0.1-SNAPSHOT")
+
