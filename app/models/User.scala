@@ -14,6 +14,7 @@ class Users extends Table[User]("User") with Cruded[User] {
     def id = column[Long]("id", O.NotNull ,O.PrimaryKey, O.AutoInc)
     def email = column[String]("email")
 
+
     def * = id.? ~ email.? <> (User, User.unapply _)
     def autoInc = email.? returning id
     def insert(o: User) = autoInc.insert( o.email)

@@ -21,6 +21,7 @@ class Newss extends Table[News]("news") with Cruded[News] {
     def date = column[Timestamp]("date")
     def title = column[String]("title")
 
+
     def * = id.? ~ comments ~ content.? ~ date.? ~ title.? <> (News, News.unapply _)
     def autoInc = comments ~ content.? ~ date.? ~ title.? returning id
     def insert(o: News) = autoInc.insert( o.comments, o.content, o.date, o.title)

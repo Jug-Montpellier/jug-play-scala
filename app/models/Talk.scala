@@ -19,6 +19,9 @@ class Talks extends Table[Talk]("talk") with Cruded[Talk] {
     def event_id = column[Long]("event_id")
     def speaker_id = column[Long]("speaker_id")
 
+    def fk27a8ccbafea2d6 = foreignKey("fk27a8ccbafea2d6", event_id, Events)(_.id)
+    def fk27a8ccf3eb05b6 = foreignKey("fk27a8ccf3eb05b6", speaker_id, Speakers)(_.id)
+
     def * = id.? ~ orderinevent ~ teaser.? ~ datetime.? ~ title.? ~ event_id.? ~ speaker_id.? <> (Talk, Talk.unapply _)
     def autoInc = orderinevent ~ teaser.? ~ datetime.? ~ title.? ~ event_id.? ~ speaker_id.? returning id
     def insert(o: Talk) = autoInc.insert( o.orderinevent, o.teaser, o.datetime, o.title, o.event_id, o.speaker_id)

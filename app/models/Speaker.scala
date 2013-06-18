@@ -28,6 +28,7 @@ class Speakers extends Table[Speaker]("speaker") with Cruded[Speaker] {
     def email = column[String]("email")
     def personalurl = column[String]("personalurl")
 
+
     def * = id.? ~ activity.? ~ compan.? ~ description.? ~ fullname.? ~ jugmember.? ~ memberfct.? ~ photourl.? ~ url.? ~ email.? ~ personalurl.? <> (Speaker, Speaker.unapply _)
     def autoInc = activity.? ~ compan.? ~ description.? ~ fullname.? ~ jugmember.? ~ memberfct.? ~ photourl.? ~ url.? ~ email.? ~ personalurl.? returning id
     def insert(o: Speaker) = autoInc.insert( o.activity, o.compan, o.description, o.fullname, o.jugmember, o.memberfct, o.photourl, o.url, o.email, o.personalurl)
