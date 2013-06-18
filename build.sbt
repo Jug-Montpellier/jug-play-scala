@@ -10,7 +10,7 @@ resolvers += "Central repository" at "http://repo1.maven.org/maven2/"
 
 dartDev := true
 
-dartNoJs := true
+//dartNoJs := true
 
 //dartEntryPoints += "sosimple.dart"
 dartEntryPoints ++= Seq("sosimple.dart")

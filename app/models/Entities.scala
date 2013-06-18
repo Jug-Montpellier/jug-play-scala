@@ -7,7 +7,7 @@ import play.api.mvc.AnyContent
 import play.api.libs.json._
 import play.api.mvc.Request
 import scala.slick.driver.BasicDriver.simple._
-//import scala.slick.driver.PostgresDriver.simple._
+
 
 import Database.threadLocalSession
 import java.sql.Timestamp
@@ -34,80 +34,12 @@ object Tests extends Tests {
 
 
 
-object Users extends Users
 object Answers extends Answers
 
 
-case class Event(id: Option[Long], capacity: Int, date: Option[Timestamp], description: Option[String], location: Option[String], map: Option[String], open: Boolean, registrationurl: Option[String], report: Option[String], title: Option[String], partner_id: Option[Long]) {
-  def attachments: Array[String] = {
 
-    val eventFolder = Play.application().getFile(s"/public/event${id.get}")
-    if (eventFolder != null) {
-      val list = eventFolder.list()
-      if (list != null)
-        return list
-    }
-    Array()
-  }
-}
 
-object Events extends Events {
-  def last(n: Int) = Query(Events).sortBy(_.date.desc.nullsLast).take(n).list
 
-  def pastAndUpComing = Query(Events).sortBy(_.date.desc.nullsLast).list.partition { e => e.date.get.before(util.now()) }
-
-  override def all = Query(Events).sortBy(_.date).list
-
-  def getById(id: Long) = {
-
-    val q = for {
-      e <- Events if e.id === id
-      t <- Talks if t.event_id === e.id
-      (t_t, tag) <- Talk_tags leftJoin Tags on (_.tags_id === _.id)
-      s <- Speakers if s.id === t.speaker_id
-    } yield (e, t, s, tag)
-
-    vo(q)
-  }
-
-  def getOpened() = {
-
-    val q = for {
-      e <- Events if e.open
-      t <- Talks if t.event_id === e.id
-      (t_t, tag) <- Talk_tags leftJoin Tags on (_.tags_id === _.id)
-      s <- Speakers if s.id === t.speaker_id
-    } yield (e, t, s, tag)
-
-    vo(q)
-  }
-
-  private def vo(q: Query[(models.Events.type, models.Talks.type, models.Speakers.type, models.Tags.type), (models.Event, models.Talk, models.Speaker, models.Tag)]): Option[EventViewObject] = {
-
-    val list = q.list
-
-    val event = list.groupBy(etst => etst._1).map {
-      case (evt, etst) => (evt, etst.groupBy(etst2 => etst2._2))
-    }
-
-    val viewObject = event map {
-      case (evt, etst) => EventViewObject(evt,
-        etst.toList.map {
-          case (talk, list) => TalkViewObject(talk,
-            list.map(_._3).distinct,
-            list.map(_._4).distinct)
-        },
-        evt.partner_id.flatMap(id => Eventpartners.getById(id)))
-    }
-
-    viewObject match {
-      case h :: _ => Some(h)
-      case _ => None
-    }
-
-  }
-
-}
 
 
 object Eventpartners extends Eventpartners {
@@ -124,7 +56,6 @@ object Eventpartners extends Eventpartners {
 }
 
 
-object Newss extends Newss
 
 
 object Participations extends Participations
@@ -132,18 +63,10 @@ object Participations extends Participations
 
 object Polls extends Polls
 
-object Speakers extends Speakers {
-  def isMember(email: String) = {
-    val q = Query(Speakers).filter(s => s.email === email).filter(s => s.jugmember)
-    Query(q.length).first > 0
-  }
-
-}
 
 
 object Tags extends Tags
 
-object Talks extends Talks
 
 object Talk_tags extends Talk_tags
 
@@ -157,17 +80,6 @@ object Yearpartners extends Yearpartners {
 
 
 
-case class User(id: Option[Long],email: Option[String])
-
-class Users extends Table[User]("User") with Cruded[User]{
-  def id = column[Long]("id", O.NotNull ,O.PrimaryKey, O.AutoInc)
-  def email = column[String]("email")
-  def * = id.? ~ email.? <> (User, User.unapply _)
-
-  def autoInc = email.? returning id 
-  def insert(o: User ) = autoInc.insert( o.email)
-  def all() = Query(Users).list
-}
 case class Answer(id: Option[Long],answer: String,votes: Option[Long],poll_id: Long)
 
 
@@ -185,24 +97,7 @@ class Answers extends Table[Answer]("answer"){
 }
 
 
-class Events extends Table[Event]("event") with Cruded[Event]{
-  def id = column[Long]("id", O.NotNull ,O.PrimaryKey, O.AutoInc)
-  def capacity = column[Int]("capacity")
-  def date = column[Timestamp]("date")
-  def description = column[String]("description")
-  def location = column[String]("location")
-  def map = column[String]("map")
-  def open = column[Boolean]("open")
-  def registrationurl = column[String]("registrationurl")
-  def report = column[String]("report")
-  def title = column[String]("title")
-  def partner_id = column[Long]("partner_id")
-  def * = id.? ~ capacity ~ date.? ~ description.? ~ location.? ~ map.? ~ open ~ registrationurl.? ~ report.? ~ title.? ~ partner_id.? <> (Event, Event.unapply _)
 
-  def autoInc = capacity ~ date.? ~ description.? ~ location.? ~ map.? ~ open ~ registrationurl.? ~ report.? ~ title.? ~ partner_id.? returning id 
-  def insert(o: Event ) = autoInc.insert( o.capacity, o.date, o.description, o.location, o.map, o.open, o.registrationurl, o.report, o.title, o.partner_id)
-  def all() = Query(Events).list
-}
 case class Eventpartner(id: Option[Long],description: Option[String],logourl: Option[String],name: Option[String],url: Option[String])
 
 class Eventpartners extends Table[Eventpartner]("eventpartner") with Cruded[Eventpartner]{
@@ -217,20 +112,7 @@ class Eventpartners extends Table[Eventpartner]("eventpartner") with Cruded[Even
   def insert(o: Eventpartner ) = autoInc.insert( o.description, o.logourl, o.name, o.url)
   def all() = Query(Eventpartners).list
 }
-case class News(id: Option[Long],comments: Boolean,content: Option[String],date: Option[Timestamp],title: Option[String])
 
-class Newss extends Table[News]("news") with Cruded[News]{
-  def id = column[Long]("id", O.NotNull ,O.PrimaryKey, O.AutoInc)
-  def comments = column[Boolean]("comments")
-  def content = column[String]("content")
-  def date = column[Timestamp]("date")
-  def title = column[String]("title")
-  def * = id.? ~ comments ~ content.? ~ date.? ~ title.? <> (News, News.unapply _)
-
-  def autoInc = comments ~ content.? ~ date.? ~ title.? returning id 
-  def insert(o: News ) = autoInc.insert( o.comments, o.content, o.date, o.title)
-  def all() = Query(Newss).list
-}
 case class Participation(id: Option[Long],code: Option[String],status: Option[Int],event_id: Option[Long],user_id: Option[Long])
 
 class Participations extends Table[Participation]("participation") with Cruded[Participation]{
@@ -259,26 +141,6 @@ class Polls extends Table[Poll]("poll") with Cruded[Poll]{
   def insert(o: Poll ) = autoInc.insert( o.question, o.expirydate, o.visible)
   def all() = Query(Polls).list
 }
-case class Speaker(id: Option[Long],activity: Option[String],compan: Option[String],description: Option[String],fullname: Option[String],jugmember: Option[Boolean],memberfct: Option[String],photourl: Option[String],url: Option[String],email: Option[String],personalurl: Option[String])
-
-class Speakers extends Table[Speaker]("speaker") with Cruded[Speaker]{
-  def id = column[Long]("id", O.NotNull ,O.PrimaryKey, O.AutoInc)
-  def activity = column[String]("activity")
-  def compan = column[String]("compan")
-  def description = column[String]("description")
-  def fullname = column[String]("fullname")
-  def jugmember = column[Boolean]("jugmember")
-  def memberfct = column[String]("memberfct")
-  def photourl = column[String]("photourl")
-  def url = column[String]("url")
-  def email = column[String]("email")
-  def personalurl = column[String]("personalurl")
-  def * = id.? ~ activity.? ~ compan.? ~ description.? ~ fullname.? ~ jugmember.? ~ memberfct.? ~ photourl.? ~ url.? ~ email.? ~ personalurl.? <> (Speaker, Speaker.unapply _)
-
-  def autoInc = activity.? ~ compan.? ~ description.? ~ fullname.? ~ jugmember.? ~ memberfct.? ~ photourl.? ~ url.? ~ email.? ~ personalurl.? returning id 
-  def insert(o: Speaker ) = autoInc.insert( o.activity, o.compan, o.description, o.fullname, o.jugmember, o.memberfct, o.photourl, o.url, o.email, o.personalurl)
-  def all() = Query(Speakers).list
-}
 case class Tag(id: Option[Long],name: Option[String])
 
 class Tags extends Table[Tag]("tag"){
@@ -290,22 +152,7 @@ class Tags extends Table[Tag]("tag"){
   def insert(o: Tag ) = autoInc.insert( o.name)
   def all() = Query(Tags).list
 }
-case class Talk(id: Option[Long],orderinevent: Int,teaser: Option[String],datetime: Option[String],title: Option[String],event_id: Option[Long],speaker_id: Option[Long])
 
-class Talks extends Table[Talk]("talk") with Cruded[Talk]{
-  def id = column[Long]("id", O.NotNull ,O.PrimaryKey, O.AutoInc)
-  def orderinevent = column[Int]("orderinevent")
-  def teaser = column[String]("teaser")
-  def datetime = column[String]("datetime")
-  def title = column[String]("title")
-  def event_id = column[Long]("event_id")
-  def speaker_id = column[Long]("speaker_id")
-  def * = id.? ~ orderinevent ~ teaser.? ~ datetime.? ~ title.? ~ event_id.? ~ speaker_id.? <> (Talk, Talk.unapply _)
-
-  def autoInc = orderinevent ~ teaser.? ~ datetime.? ~ title.? ~ event_id.? ~ speaker_id.? returning id 
-  def insert(o: Talk ) = autoInc.insert( o.orderinevent, o.teaser, o.datetime, o.title, o.event_id, o.speaker_id)
-  def all() = Query(Talks).list
-}
 case class Talk_tag(talk_id: Long,tags_id: Long)
 
 class Talk_tags extends Table[Talk_tag]("talk_tag"){
