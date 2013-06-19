@@ -95,7 +95,7 @@ class Events extends Table[Event]("event") with Cruded[Event] {
     def title = column[String]("title")
     def partner_id = column[Long]("partner_id")
 
-    def fk403827aa33e91e4 = foreignKey("fk403827aa33e91e4", partner_id, Eventpartners)(_.id)
+    def partner = foreignKey("fk403827aa33e91e4", partner_id, Eventpartners)(_.id)
 
     def * = id.? ~ capacity ~ date.? ~ description.? ~ location.? ~ map.? ~ open ~ registrationurl.? ~ report.? ~ title.? ~ partner_id.? <> (Event, Event.unapply _)
     def autoInc = capacity ~ date.? ~ description.? ~ location.? ~ map.? ~ open ~ registrationurl.? ~ report.? ~ title.? ~ partner_id.? returning id

@@ -1,13 +1,15 @@
 //scalaVersion := "2.10.1"
 scalaVersion := "2.9.2"
 
+//offline := true
+
 // Comment to get more information during initialization
 logLevel := Level.Warn
 
 // The Typesafe repository 
-resolvers += Resolver.file("Local Repository", file("/Users/olivier/projects/scala/Play20/repository/local"))(Resolver.ivyStylePatterns)
+//resolvers += Resolver.file("Local Repository", file("/Users/olivier/projects/scala/Play20/repository/local"))(Resolver.ivyStylePatterns)
 
-resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
+//resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
 
 //resolvers += "Orcades-LR repository" at "http://www.orcades.net/tmprepo/"
 
