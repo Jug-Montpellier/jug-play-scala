@@ -53,7 +53,7 @@ object ConnectionActor {
         val iteratee = Iteratee.foreach[JsValue] { event =>
           //          println("received " + event \ "text")
           connectionActor ! Message(username, (event \ "text").as[String])
-        }.mapDone { _ =>
+        }.map { _ =>
           //          println("Done")
           cancellable.cancel
           

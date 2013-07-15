@@ -17,7 +17,7 @@ import securesocial.core.SecureSocial
 
 trait JsonAction extends SecureSocial with JSonFormats {
 
-  def JsonAction(f: JsValue => JsResult[SimpleResult[JsValue]]): Action[AnyContent] = Action {
+  def JsonAction(f: JsValue => JsResult[SimpleResult]): Action[AnyContent] = Action {
     request =>
       try {
         request.body.asJson.map { json =>
@@ -38,7 +38,7 @@ trait JsonAction extends SecureSocial with JSonFormats {
   }
   
   
-  def SecuredJsonAction(authorize: Authorization)(f: JsValue => JsResult[SimpleResult[JsValue]]): Action[AnyContent] = SecuredAction(true,authorize) {
+  def SecuredJsonAction(authorize: Authorization)(f: JsValue => JsResult[SimpleResult]): Action[AnyContent] = SecuredAction(true,authorize) {
     request =>
       try {
         request.body.asJson.map { json =>

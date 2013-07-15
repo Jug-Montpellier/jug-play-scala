@@ -44,7 +44,7 @@ object Admin extends Controller
 
  // import play.crude.CrudeMacro._
 
-  def insert[A](v: JsValue => JsResult[A], cruded: Cruded[A])(implicit json: JsValue): JsResult[SimpleResult[JsValue]] = v(json).map(a=>cruded.insert(a)).map(r=>Ok(Json.toJson(r)))
+  def insert[A](v: JsValue => JsResult[A], cruded: Cruded[A])(implicit json: JsValue): JsResult[SimpleResult] = v(json).map(a=>cruded.insert(a)).map(r=>Ok(Json.toJson(r)))
     
 
   def all(table: String): Action[AnyContent] =
