@@ -1,6 +1,6 @@
 import 'dart:html';
 import 'dart:async';
-import 'dart:json';
+import 'dart:convert';
 
 import 'package:web_ui/watcher.dart' as watchers;
 import 'package:json_object/json_object.dart';
@@ -41,7 +41,7 @@ class SpeakerImpl extends JsonObject implements Speaker {
 }
 
 speakersLoader(HttpRequest req){
- speakers = parse(req.responseText);
+ speakers = JSON.decode(req.responseText);
  watchers.dispatch();
 }
 

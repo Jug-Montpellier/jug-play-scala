@@ -1,5 +1,4 @@
-scalaVersion := "2.10.2"
-//scalaVersion := "2.9.2"
+scalaVersion := "2.10.3"
 
 offline := true
 
@@ -16,9 +15,7 @@ resolvers += "Sonatype snapshots" at "http://oss.sonatype.org/content/repositori
 //resolvers += "Orcades-LR repository" at "http://www.orcades.net/tmprepo/"
 
 // Use the Play sbt plugin for Play projects
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.2-SNAPSHOT")
-//addSbtPlugin("play" % "sbt-plugin" % "2.1.1")
-//addSbtPlugin("play" % "sbt-plugin" % "2.1.3-SNAPSHOT")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.2.1")
 
 addSbtPlugin("net.orcades" % "sbt-dart-plugin" % "0.2.2-SNAPSHOT")
 

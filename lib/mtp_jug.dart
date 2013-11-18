@@ -3,8 +3,8 @@ library mtp_jug;
 
 import 'dart:math';
 import 'dart:html';
-import 'dart:json';
 import 'dart:async';
+import 'dart:convert';
 
 
 part 'src/crude.dart';

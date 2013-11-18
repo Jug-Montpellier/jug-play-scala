@@ -1,4 +1,4 @@
-scalaVersion := "2.10.2"
+scalaVersion := "2.10.3"
 
 offline := true
 
@@ -21,7 +21,7 @@ dartDev := true
 //dartEntryPoints += "sosimple.dart"
 dartEntryPoints ++= Seq("sosimple.dart")
 
-dartWebUIEntryPoints += "speakers.html"
+//dartWebUIEntryPoints += "speakers.html"
 
-dartWebUIEntryPoints += "admin/dbbrowser.html"
+//dartWebUIEntryPoints += "admin/dbbrowser.html"
 

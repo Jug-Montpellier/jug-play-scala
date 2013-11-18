@@ -37,7 +37,7 @@ class WebSocketSample {
       disconnect.disabled=false;
       
       webSocket.onMessage.listen((e){
-        Map data = parse(e.data); 
+        Map data = JSON.decode(e.data); 
         // window.alert(data["message"]);
         context.clearRect(0, 0, canvas.width, canvas.height);
         context.strokeText(data["message"], rand.nextInt(200), 30 + rand.nextInt(200));
