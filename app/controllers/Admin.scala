@@ -82,8 +82,8 @@ object Admin extends Controller
 
     }
 
-  def tables //= SecuredAction(OnlyMe("olivier.nouguier@gmail.com")) {
-  = Action {
+  def tables = SecuredAction(OnlyMe("olivier.nouguier@gmail.com")) {
+ // = Action {
     implicit request =>
       withSession {
 
