@@ -15,6 +15,13 @@ Launch sbt: `$> sbt`
 
 Run the server: `$> run`
 
+You need to have a postgresql database named jug and its owner needs to be *test* with password *test* :
+
+* `$> psql`
+* `$> CREATE USER test;`
+* `$> ALTER USER test WITH ENCRYPTED PASSWORD 'test';`
+* `$> CREATE DATABASE jug OWNER test;`
+
 ## To build the dist file for cloundfoundry: 
 
 `$> sbt -Dconfig.file=conf/cloud.conf clean dist`
